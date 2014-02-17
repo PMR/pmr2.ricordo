@@ -1,0 +1,12 @@
+We need to avoid using web services to autocomplete things.  Try
+
+    select ?s ?p
+    from <http://models.example.com/go.owl>
+    from <http://models.example.com/fma.owl>
+    where {
+        ?s <http://www.w3.org/2000/01/rdf-schema#label> ?p
+        filter regex(?p, "plasma membrane", "i") .
+    };
+
+The above would search for anything like plasma membrane in the label for
+the ontologies involved.
