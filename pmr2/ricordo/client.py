@@ -66,3 +66,57 @@ class RdfStoreClient(RicordoClient):
 
     def getAnnotationOfResource(self, data):
         return self.search(target='getAnnotationOfResource', data=data)
+
+
+class SparqlClient(object):
+    """
+    A client for accessing the Virtuoso Sparql webservice endpoint.
+    """
+
+    def __init__(self, endpoint='http://localhost:8890/sparql',
+            response_format='application/json',
+            requests_session=None):
+
+        if requests_session is None:
+            requests_session = requests.Session()
+
+        self.endpoint = endpoint
+        self.response_format = response_format
+        self.requests_session = requests_session
+
+    def query(self, sparql_query):
+        r = self.requests_session.get(self.endpoint, params={
+            'query': sparql_query,
+            'format': 'application/json',
+        })
+        return r.json()
+
+
+class OwlSparqlClient(SparqlClient):
+
+    _sparql_query = """
+        select ?s ?p
+        %(from_graph_statement)s
+        where {
+            ?s <http://www.w3.org/2000/01/rdf-schema#label> ?p
+            filter regex(?p, "%%(keyword)s", "i") .
+        }
+    """
+
+    def __init__(self, graph_urls=(), *a, **kw):
+        self.graph_urls = graph_urls
+        self.default_sparql_query = self.make_query(graph_urls)
+        super(OwlSparqlClient, self).__init__(*a, **kw)
+
+    def make_query(self, graph_urls):
+        stmt = '\n'.join(['from <%s>' % g for g in graph_urls])
+        return self._sparql_query % {'from_graph_statement': stmt}
+
+    def get_owl_terms(self, keyword):
+        """
+        Method to provide the labels and the associated identifier for
+        the terms within the selected ontologies users will be searching
+        their data against.
+        """
+
+        return self.query(self.default_sparql_query % {'keyword': keyword})
