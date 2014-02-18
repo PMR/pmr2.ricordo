@@ -2,7 +2,7 @@ import requests
 import json
 
 
-class Client(object):
+class RicordoClient(object):
 
     def __init__(self, root,
             host='127.0.0.1',
@@ -38,7 +38,7 @@ class Client(object):
         return self.requests_session.post(target, data=json.dumps(data)).json()
 
 
-class OwlkbClient(Client):
+class OwlkbClient(RicordoClient):
     """
     Owl knowledgebase client.
     """
@@ -50,7 +50,7 @@ class OwlkbClient(Client):
         return self.get(query=query, endpoint='terms')
 
 
-class RdfStoreClient(Client):
+class RdfStoreClient(RicordoClient):
     """
     RICORDO RDF Store client.
     """

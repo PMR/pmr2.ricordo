@@ -2,8 +2,7 @@ import unittest
 import requests
 import json
 
-from pmr2.ricordo.client import OwlkbClient
-from pmr2.ricordo.client import RdfStoreClient
+from pmr2.ricordo import client
 
 
 def test_available(text, url):
@@ -32,7 +31,7 @@ class LiveOwlClientTestCase(unittest.TestCase):
     """
 
     def setUp(self):
-        self.client = OwlkbClient()
+        self.client = client.OwlkbClient()
 
     def test_query(self):
         results = self.client.query_terms('GO_0005886')
@@ -53,7 +52,7 @@ class LiveRicordoClientTestCase(unittest.TestCase):
     """
 
     def setUp(self):
-        self.client = RdfStoreClient()
+        self.client = client.RdfStoreClient()
 
     def test_search_getResourceForAnnotation(self):
         results = self.client.getResourceForAnnotation({'query':
