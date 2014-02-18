@@ -95,11 +95,11 @@ class SparqlClient(object):
 class OwlSparqlClient(SparqlClient):
 
     _sparql_query = """
-        select ?s ?p
+        select ?s ?o
         %(from_graph_statement)s
         where {
-            ?s <http://www.w3.org/2000/01/rdf-schema#label> ?p
-            filter regex(?p, "%%(keyword)s", "i") .
+            ?s <http://www.w3.org/2000/01/rdf-schema#label> ?o
+            filter regex(?o, "%%(keyword)s", "i") .
         }
     """
 
@@ -119,4 +119,6 @@ class OwlSparqlClient(SparqlClient):
         their data against.
         """
 
-        return self.query(self.default_sparql_query % {'keyword': keyword})
+        results = self.query(self.default_sparql_query % {'keyword': keyword})
+        return sorted([(i['o']['value'], i['s']['value'])
+            for i in results['results']['bindings']])
