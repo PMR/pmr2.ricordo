@@ -61,11 +61,15 @@ class RdfStoreClient(RicordoClient):
     def search(self, target, data):
         return self.post(endpoint='search/' + target, data=data)
 
-    def getResourceForAnnotation(self, data):
-        return self.search(target='getResourceForAnnotation', data=data)
+    def getResourceForAnnotation(self, query):
+        return self.search(target='getResourceForAnnotation', data={
+            'query': query,
+        })
 
-    def getAnnotationOfResource(self, data):
-        return self.search(target='getAnnotationOfResource', data=data)
+    def getAnnotationOfResource(self, query):
+        return self.search(target='getAnnotationOfResource', data={
+            'query': query,
+        })
 
 
 class SparqlClient(object):

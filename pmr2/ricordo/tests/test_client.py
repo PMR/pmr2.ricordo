@@ -62,15 +62,15 @@ class LiveRicordoClientTestCase(unittest.TestCase):
         self.client = client.RdfStoreClient()
 
     def test_search_getResourceForAnnotation(self):
-        results = self.client.getResourceForAnnotation({'query':
+        results = self.client.getResourceForAnnotation(
             'http://identifiers.org/obo.go/GO:0031594',
-        })
+        )
         self.assertTrue(results['resources']['count'] > 0)
 
     def test_search_getAnnotationOfResource(self):
-        results = self.client.getAnnotationOfResource({'query':
+        results = self.client.getAnnotationOfResource(
             'http://www.ebi.ac.uk/ricordo/toolbox/sbmlo#BIOMD0000000002_comp1',
-        })
+        )
         p, v = results['resources']['resources'][0]['value']
         self.assertEqual(p, 'http://biomodels.net/biology-qualifiers#is')
         self.assertEqual(v, 'http://identifiers.org/obo.go/GO:0031594')
