@@ -4,15 +4,8 @@ import json
 
 class RicordoClient(object):
 
-    def __init__(self, root,
-            host='127.0.0.1',
-            port='8080',
-            requests_session=None,
-        ):
-
-        self.host = host
-        self.port = port
-        self.root = root
+    def __init__(self, root_endpoint, requests_session=None):
+        self.root_endpoint = root_endpoint
 
         if requests_session is None:
             requests_session = requests.Session()
@@ -22,19 +15,12 @@ class RicordoClient(object):
             })
         self.requests_session = requests_session
 
-    @property
-    def target(self):
-        if not hasattr(self, '_target'):
-            self._target = 'http://%s:%s/%s' % (
-                self.host, self.port, self.root)
-        return self._target
-
     def get(self, endpoint, query):
-        target = '%s/%s/%s' % (self.target, endpoint, query)
+        target = '%s/%s/%s' % (self.root_endpoint, endpoint, query)
         return self.requests_session.get(target).json()
 
     def post(self, endpoint, data):
-        target = '%s/%s' % (self.target, endpoint)
+        target = '%s/%s' % (self.root_endpoint, endpoint)
         return self.requests_session.post(target, data=json.dumps(data)).json()
 
 
@@ -43,8 +29,10 @@ class OwlkbClient(RicordoClient):
     Owl knowledgebase client.
     """
 
-    def __init__(self, root='/ricordo-owlkb-ws/service', *a, **kw):
-        super(OwlkbClient, self).__init__(root, *a, **kw)
+    def __init__(self,
+            root_endpoint='http://localhost:8080/ricordo-owlkb-ws/service',
+            *a, **kw):
+        super(OwlkbClient, self).__init__(root_endpoint, *a, **kw)
 
     def query_terms(self, query):
         return self.get(query=query, endpoint='terms')
@@ -55,8 +43,10 @@ class RdfStoreClient(RicordoClient):
     RICORDO RDF Store client.
     """
 
-    def __init__(self, root='/ricordo-rdfstore-ws/service', *a, **kw):
-        super(RdfStoreClient, self).__init__(root, *a, **kw)
+    def __init__(self,
+            root_endpoint='http://localhost:8080/ricordo-rdfstore-ws/service',
+            *a, **kw):
+        super(RdfStoreClient, self).__init__(root_endpoint, *a, **kw)
 
     def search(self, target, data):
         return self.post(endpoint='search/' + target, data=data)
@@ -78,14 +68,12 @@ class SparqlClient(object):
     """
 
     def __init__(self, endpoint='http://localhost:8890/sparql',
-            response_format='application/json',
             requests_session=None):
 
         if requests_session is None:
             requests_session = requests.Session()
 
         self.endpoint = endpoint
-        self.response_format = response_format
         self.requests_session = requests_session
 
     def query(self, sparql_query):
