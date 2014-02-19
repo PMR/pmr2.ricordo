@@ -37,6 +37,8 @@ class LiveOwlClientTestCase(unittest.TestCase):
     defined as the actilve knowledgebase.
     """
 
+    level = 10
+
     def setUp(self):
         self.client = client.OwlkbClient()
 
@@ -57,6 +59,8 @@ class LiveRicordoClientTestCase(unittest.TestCase):
     webservices installed and running with the Gene Ontology (go.owl)
     defined as the actilve knowledgebase.
     """
+
+    level = 10
 
     def setUp(self):
         self.client = client.RdfStoreClient()
@@ -83,6 +87,8 @@ class LiveOwlSparqlClientTestCase(unittest.TestCase):
     Test cases that requires Virutoso running with both the FMA and
     GO owl graphs added at the specific designated URLs listed here.
     """
+
+    level = 10
 
     def setUp(self):
         self.client = client.OwlSparqlClient(graph_urls=(
