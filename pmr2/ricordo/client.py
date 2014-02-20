@@ -35,7 +35,8 @@ class OwlkbClient(RicordoClient):
         super(OwlkbClient, self).__init__(root_endpoint, *a, **kw)
 
     def query_terms(self, query):
-        return self.get(query=query, endpoint='terms')
+        return [i['id'] for i in self.get(query=query, endpoint='terms').get(
+            'terms', {}).get('terms', [])]
 
 
 class RdfStoreClient(RicordoClient):
@@ -49,7 +50,8 @@ class RdfStoreClient(RicordoClient):
         super(RdfStoreClient, self).__init__(root_endpoint, *a, **kw)
 
     def search(self, target, data):
-        return self.post(endpoint='search/' + target, data=data)
+        return [r['value'] for r in self.post(
+            endpoint='search/' + target, data=data)['resources']['resources']]
 
     def getResourceForAnnotation(self, query):
         return self.search(target='getResourceForAnnotation', data={

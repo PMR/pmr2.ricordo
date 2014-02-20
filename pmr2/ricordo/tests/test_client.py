@@ -44,11 +44,11 @@ class LiveOwlClientTestCase(unittest.TestCase):
 
     def test_query(self):
         results = self.client.query_terms('GO_0005886')
-        self.assertEqual(results['terms']['count'], 3)
+        self.assertEqual(len(results), 3)
 
     def test_regulates_some_query(self):
         results = self.client.query_terms('regulates some GO_0005978')
-        self.assertEqual(results.keys(), ['terms'])
+        self.assertTrue(len(results) > 1)
 
 
 @unittest.skipUnless(rdfstore_test_available(),
@@ -69,13 +69,13 @@ class LiveRicordoClientTestCase(unittest.TestCase):
         results = self.client.getResourceForAnnotation(
             'http://identifiers.org/obo.go/GO:0031594',
         )
-        self.assertTrue(results['resources']['count'] > 0)
+        self.assertTrue(len(results) > 0)
 
     def test_search_getAnnotationOfResource(self):
         results = self.client.getAnnotationOfResource(
             'http://www.ebi.ac.uk/ricordo/toolbox/sbmlo#BIOMD0000000002_comp1',
         )
-        p, v = results['resources']['resources'][0]['value']
+        p, v = results[0]
         self.assertEqual(p, 'http://biomodels.net/biology-qualifiers#is')
         self.assertEqual(v, 'http://identifiers.org/obo.go/GO:0031594')
 
