@@ -91,26 +91,31 @@ class OwlSparqlClient(SparqlClient):
         %(from_graph_statement)s
         where {
             ?s <http://www.w3.org/2000/01/rdf-schema#label> ?o
-            filter regex(?o, "%%(keyword)s", "i") .
+            filter regex(?o, "%(keyword)s", "i") .
         }
     """
 
     def __init__(self, graph_urls=(), *a, **kw):
         self.graph_urls = graph_urls
-        self.default_sparql_query = self.make_query(graph_urls)
         super(OwlSparqlClient, self).__init__(*a, **kw)
 
-    def make_query(self, graph_urls):
+    def make_query(self, graph_urls, keyword):
         stmt = '\n'.join(['from <%s>' % g for g in graph_urls])
-        return self._sparql_query % {'from_graph_statement': stmt}
+        return self._sparql_query % {
+            'from_graph_statement': stmt,
+            'keyword': keyword,
+        }
 
-    def get_owl_terms(self, keyword):
+    def get_owl_terms(self, keyword, graph_urls=None):
         """
         Method to provide the labels and the associated identifier for
         the terms within the selected ontologies users will be searching
         their data against.
         """
 
-        results = self.query(self.default_sparql_query % {'keyword': keyword})
+        if graph_urls is None:
+            graph_urls = self.graph_urls
+
+        results = self.query(self.make_query(graph_urls, keyword))
         return sorted([(i['o']['value'], i['s']['value'])
             for i in results['results']['bindings']])

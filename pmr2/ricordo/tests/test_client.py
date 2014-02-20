@@ -101,8 +101,7 @@ class LiveOwlSparqlClientTestCase(unittest.TestCase):
         self.assertEqual(len(results), 230)
 
     def test_list_go_only(self):
-        self.client = client.OwlSparqlClient(graph_urls=(
+        results = self.client.get_owl_terms('plasma membrane', graph_urls=(
             'http://models.example.com/go.owl',
         ))
-        results = self.client.get_owl_terms('plasma membrane')
         self.assertEqual(len(results), 109)
