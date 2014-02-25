@@ -40,7 +40,7 @@ class Search(object):
 
         self.owlkb = client.OwlkbClient(owlkb_endpoint)
         self.rdfstore = client.RdfStoreClient(rdfstore_endpoint)
-        self.owls = client.OwlSparqlClient(rdfstore_endpoint)
+        self.owls = client.OwlSparqlClient(sparql_endpoint, owlkb_graphs)
 
         self.owlgraph_owlkb_uri_map = owlgraph_owlkb_uri_map
         self.owlkb_rdfstore_uri_map = owlkb_rdfstore_uri_map
@@ -52,7 +52,9 @@ class Search(object):
         """
 
         results = []
-        terms = self.owlkb.query_terms(query)
+        subbed_query = self.owlgraph_owlkb_uri_map(query)
+        terms = self.owlkb.query_terms(subbed_query)
+
         for term in terms:
             if self.owlkb_rdfstore_uri_map:
                 real_terms = self.owlkb_rdfstore_uri_map(term)
@@ -65,3 +67,6 @@ class Search(object):
                     continue
                 results.append((t, items))
         return results
+
+    def get_owl_terms(self, keyword, graph_urls=None):
+        return self.owls.get_owl_terms(keyword, graph_urls)
