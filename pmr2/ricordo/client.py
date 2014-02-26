@@ -54,6 +54,26 @@ class RdfStoreClient(RicordoClient):
             endpoint='search/' + target, data=data)['resources']['resources']]
 
     def getResourceForAnnotation(self, query):
+        """
+        It's::
+
+            define input:inference "ricordo_rule"
+            SELECT ?r
+            FROM <http://ricordo.com>
+            WHERE
+            { ?r <http://www.ebi.ac.uk/ricordo/model#isAnnotatedWith> <[]> }
+
+        Consider not restricting by one graph, and have the query return
+        the URI to the graph of the matched subject.
+
+            define input:inference "ricordo_rule"
+            SELECT ?s
+            WHERE {
+              GRAPH ?g {
+                ?s <http://www.ebi.ac.uk/ricordo/model#isAnnotatedWith> <[]>
+              }
+            }
+        """
         return self.search(target='getResourceForAnnotation', data={
             'query': query,
         })
