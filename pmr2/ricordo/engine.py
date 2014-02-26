@@ -52,8 +52,11 @@ class Search(object):
         """
 
         results = []
-        subbed_query = self.owlgraph_owlkb_uri_map(query)
-        terms = self.owlkb.query_terms(subbed_query)
+        if self.owlgraph_owlkb_uri_map:
+            subbed_query = self.owlgraph_owlkb_uri_map(query)
+            terms = self.owlkb.query_terms(subbed_query)
+        else:
+            terms = self.owlkb.query_terms(query)
 
         for term in terms:
             if self.owlkb_rdfstore_uri_map:
