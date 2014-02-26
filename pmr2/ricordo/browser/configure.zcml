@@ -1,0 +1,35 @@
+<configure 
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="pmr2.virtuoso.browser">
+
+  <include package="Products.CMFCore" file="permissions.zcml" />
+
+  <browser:view
+      for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+      name="pmr2_ricordo"
+      class=".form.RootView"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for=".form.RootView"
+      name="query"
+      class=".form.QueryForm"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for=".form.RootView"
+      name="owlterms"
+      class=".webservice.OwlSparqlPage"
+      permission="zope2.View"
+      />
+
+  <browser:resourceDirectory
+      name="pmr2.ricordo.js"
+      directory="js"
+      layer="pmr2.ricordo.browser.interfaces.IJSLayer"
+      />
+
+</configure>

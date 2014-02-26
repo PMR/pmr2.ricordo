@@ -1,0 +1,14 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="pmr2.ricordo">
+
+  <genericsetup:registerProfile
+      name="default"
+      title="PMR RICORDO Integration"
+      directory="profiles/default"
+      description="Enables the integration of RICORDO into PMR."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+</configure>

@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="plone"
+      metal:use-macro="context/@@pmr2-z3cform-macros/main">
+
+<metal:block fill-slot="main">
+
+  <h1 tal:condition="view/label" class="documentFirstHeading"
+      tal:content="view/label | nothing"/>
+
+  <tal:block metal:use-macro="context/@@ploneform-macros/titlelessform">
+
+    <metal:block fill-slot="formtop">
+
+      <div class="field">
+        <label>
+          <span>Query Builder</span>
+        </label>
+
+        <div class="formHelp">
+          This is a helper builds a Manchester styled query below from the
+          following template.
+         </div>
+
+        <div class="widget">
+          <input type="text" name="predicate" />
+          some
+          <input type="text" name="term" class="queryterm" />
+        </div>
+      </div>
+
+    </metal:block>
+
+    <metal:block fill-slot="formbottom">
+
+      <tal:if tal:condition="view/results">
+        <div tal:content="view/results">
+        </div>
+      </tal:if>
+
+      <span tal:replace="structure context/@@authenticator/authenticator"/>
+
+    </metal:block>
+
+  </tal:block>
+
+</metal:block>
+
+</html>

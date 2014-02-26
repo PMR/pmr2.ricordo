@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<layers>
+    <layer name="pmr2.ricordo.js"
+           interface="pmr2.ricordo.browser.interfaces.IJSLayer" />
+</layers>

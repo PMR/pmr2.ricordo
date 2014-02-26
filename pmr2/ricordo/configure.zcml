@@ -3,4 +3,7 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="pmr2.ricordo">
 
+  <include package=".browser" />
+  <include file="profiles.zcml" />
+
 </configure>
