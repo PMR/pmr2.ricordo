@@ -14,7 +14,7 @@
 
     <metal:block fill-slot="formtop">
 
-      <div class="field">
+      <div class="field form-inline">
         <label>
           <span>Query Builder</span>
         </label>
@@ -25,9 +25,10 @@
          </div>
 
         <div class="widget">
-          <input type="text" name="predicate" />
+          <input type="text" name="relation" class="queryrelation" />
           some
-          <input type="text" name="term" class="queryterm" />
+          <input type="text" name="term" class="queryterm" autocomplete="off" />
+          <button type="button" id="btnBuildQuery" class="btn">Build Query</button>
         </div>
       </div>
 
