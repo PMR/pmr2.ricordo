@@ -9,10 +9,16 @@ $(document).ready(function () {
 
 });
 
-function suggestTerms(query, process) {
-    return getTerms(query, process);
-}
+var lastQuery;
 
+function suggestTerms(query, process) {
+    setTimeout(function() {
+        if ((query == $(".queryterm").val()) && (query != lastQuery)) {
+            lastQuery = query;
+            getTerms(query, process);
+        }
+    }, 200);
+}
 
 function getTerms(query, process) {
     target = window.location.href.toString().replace(
