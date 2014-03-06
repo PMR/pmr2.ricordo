@@ -1,0 +1,9 @@
+define input:inference "ricordo_rule"
+SELECT ?g ?p ?a
+WHERE
+{
+    GRAPH ?g {
+        %(iri)s ?p ?a .
+    }
+    ?p <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/ricordo/ricordo-qualifiers#RICORDOQualifier>
+}

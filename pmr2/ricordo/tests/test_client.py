@@ -56,9 +56,13 @@ class LiveRicordoClientTestCase(unittest.TestCase):
         results = self.client.getAnnotationOfResource(
             'http://www.ebi.ac.uk/ricordo/toolbox/sbmlo#BIOMD0000000002_comp1',
         )
-        p, v = results[0]
-        self.assertEqual(p, 'http://biomodels.net/biology-qualifiers#is')
-        self.assertEqual(v, 'http://identifiers.org/obo.go/GO:0031594')
+        n = results[0]
+        self.assertEqual(n['g']['value'],
+            'http://ricordo.com')
+        self.assertEqual(n['p']['value'],
+            'http://biomodels.net/biology-qualifiers#is')
+        self.assertEqual(n['a']['value'],
+            'http://identifiers.org/obo.go/GO:0031594')
 
 
 @unittest.skipUnless(virtuoso_test_available(),

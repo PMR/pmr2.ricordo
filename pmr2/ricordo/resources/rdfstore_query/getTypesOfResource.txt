@@ -1,0 +1,7 @@
+define input:inference "ricordo_rule"
+SELECT ?g ?s
+WHERE {
+    GRAPH ?g {
+        ?s <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://www.ebi.ac.uk/ricordo/model#model>
+    }
+}

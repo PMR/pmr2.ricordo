@@ -25,7 +25,7 @@
          </div>
 
         <div class="widget">
-          <input type="text" name="relation" class="queryrelation" />
+          <input type="text" name="relation" class="queryrelation" autocomplete="off" />
           some
           <input type="text" name="term" class="queryterm" autocomplete="off" />
           <button type="button" id="btnBuildQuery" class="btn">Build Query</button>

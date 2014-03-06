@@ -8,8 +8,6 @@ class Search(object):
 
     def __init__(self,
             owlkb_endpoint='http://localhost:8080/ricordo-owlkb-ws/service',
-            rdfstore_endpoint=
-                'http://localhost:8080/ricordo-rdfstore-ws/service',
             sparql_endpoint='http://localhost:8890/sparql',
             owlkb_graphs=(),
             owlgraph_owlkb_uri_map=None,
@@ -39,7 +37,7 @@ class Search(object):
         """
 
         self.owlkb = client.OwlkbClient(owlkb_endpoint)
-        self.rdfstore = client.RdfStoreClient(rdfstore_endpoint)
+        self.rdfstore = client.RdfStoreClient(sparql_endpoint)
         self.owls = client.OwlSparqlClient(sparql_endpoint, owlkb_graphs)
 
         self.owlgraph_owlkb_uri_map = owlgraph_owlkb_uri_map
@@ -65,7 +63,7 @@ class Search(object):
                 # 1-tuple of original term
                 real_terms = (term,)
             for t in real_terms:
-                items = self.rdfstore.search(target=method, data={'query': t})
+                items = self.rdfstore.search(target=method, data=t)
                 if not items:
                     continue
                 results.append((t, items))

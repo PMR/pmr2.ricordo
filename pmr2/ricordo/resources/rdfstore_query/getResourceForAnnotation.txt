@@ -1,0 +1,8 @@
+define input:inference "ricordo_rule"
+SELECT ?g ?r
+WHERE
+{
+    GRAPH ?g {
+        ?r <http://www.ebi.ac.uk/ricordo/model#isAnnotatedWith> %(iri)s
+    }
+}

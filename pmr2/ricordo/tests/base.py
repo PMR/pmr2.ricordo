@@ -11,8 +11,7 @@ def owlkb_test_available():
         'http://127.0.0.1:8080/ricordo-owlkb-ws/')
 
 def rdfstore_test_available():
-    return test_available('RICORDO-rdfstore-webservice',
-        'http://127.0.0.1:8080/ricordo-rdfstore-ws/')
+    return virtuoso_test_available()
 
 def virtuoso_test_available():
     try:

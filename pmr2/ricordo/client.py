@@ -1,5 +1,49 @@
+from os.path import basename, dirname, join
+from glob import glob
+
 import requests
 import json
+
+from pmr2.virtuoso.sparql import quote_iri
+
+
+def load_queries(target_dir):
+    result = {}
+    for fn in glob(join(target_dir, '*.txt')):
+        with open(fn) as fd:
+            result[basename(fn)[:-4]] = fd.read()
+    return result
+
+_base_queries = {}
+def _load():
+    global _base_queries
+    _base_queries = load_queries(join(dirname(__file__),
+        'resources', 'rdfstore_query'))
+
+_load()
+del _load
+
+
+class SparqlClient(object):
+    """
+    A client for accessing the Virtuoso Sparql webservice endpoint.
+    """
+
+    def __init__(self, endpoint='http://localhost:8890/sparql',
+            requests_session=None):
+
+        if requests_session is None:
+            requests_session = requests.Session()
+
+        self.endpoint = endpoint
+        self.requests_session = requests_session
+
+    def query(self, sparql_query):
+        r = self.requests_session.get(self.endpoint, params={
+            'query': sparql_query,
+            'format': 'application/json',
+        })
+        return r.json()
 
 
 class RicordoClient(object):
@@ -39,71 +83,20 @@ class OwlkbClient(RicordoClient):
             'terms', {}).get('terms', [])]
 
 
-class RdfStoreClient(RicordoClient):
+class RdfStoreClient(SparqlClient):
     """
     RICORDO RDF Store client.
     """
 
-    def __init__(self,
-            root_endpoint='http://localhost:8080/ricordo-rdfstore-ws/service',
-            *a, **kw):
-        super(RdfStoreClient, self).__init__(root_endpoint, *a, **kw)
-
     def search(self, target, data):
-        return [r['value'] for r in self.post(
-            endpoint='search/' + target, data=data)['resources']['resources']]
+        t = _base_queries[target] % {'iri': '<%s>' % quote_iri(data)}
+        return self.query(t).get('results', {}).get('bindings')
 
     def getResourceForAnnotation(self, query):
-        """
-        It's::
-
-            define input:inference "ricordo_rule"
-            SELECT ?r
-            FROM <http://ricordo.com>
-            WHERE
-            { ?r <http://www.ebi.ac.uk/ricordo/model#isAnnotatedWith> <[]> }
-
-        Consider not restricting by one graph, and have the query return
-        the URI to the graph of the matched subject.
-
-            define input:inference "ricordo_rule"
-            SELECT ?s
-            WHERE {
-              GRAPH ?g {
-                ?s <http://www.ebi.ac.uk/ricordo/model#isAnnotatedWith> <[]>
-              }
-            }
-        """
-        return self.search(target='getResourceForAnnotation', data={
-            'query': query,
-        })
+        return self.search('getResourceForAnnotation', query)
 
     def getAnnotationOfResource(self, query):
-        return self.search(target='getAnnotationOfResource', data={
-            'query': query,
-        })
-
-
-class SparqlClient(object):
-    """
-    A client for accessing the Virtuoso Sparql webservice endpoint.
-    """
-
-    def __init__(self, endpoint='http://localhost:8890/sparql',
-            requests_session=None):
-
-        if requests_session is None:
-            requests_session = requests.Session()
-
-        self.endpoint = endpoint
-        self.requests_session = requests_session
-
-    def query(self, sparql_query):
-        r = self.requests_session.get(self.endpoint, params={
-            'query': sparql_query,
-            'format': 'application/json',
-        })
-        return r.json()
+        return self.search('getAnnotationOfResource', query)
 
 
 class OwlSparqlClient(SparqlClient):
