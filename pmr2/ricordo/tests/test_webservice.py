@@ -11,7 +11,7 @@ from .base import virtuoso_test_available
 
 @unittest.skipUnless(virtuoso_test_available(),
         "Virtuso SPARQL endpoint not available.")
-class LiveOwlSparqlClientTestCase(ptc.PloneTestCase):
+class LiveOwlSparqlClientTestCase(ptc.FunctionalTestCase):
     """
     Test cases that requires Virutoso running with both the FMA and
     GO owl graphs added at the specific designated URLs listed here.
@@ -21,11 +21,11 @@ class LiveOwlSparqlClientTestCase(ptc.PloneTestCase):
 
     level = 10
 
-    def setUp(self):
+    def afterSetUp(self):
         request = TestRequest()
         self.page = webservice.OwlSparqlPage(self.portal, request)
 
     def test_query(self):
-        self.page.publishTraverse('plasma membrane')
+        self.page.publishTraverse(self.page.request, 'plasma membrane')
         results = json.loads(self.page())
-        self.assertEqual(len(results), 230)
+        self.assertEqual(len(results['results']), 230)

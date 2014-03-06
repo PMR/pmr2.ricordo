@@ -1,3 +1,5 @@
+import requests
+
 def test_available(text, url):
     try:
         return text in requests.get(url).text

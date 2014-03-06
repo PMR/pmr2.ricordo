@@ -25,7 +25,7 @@ class SearchEngineTestCase(unittest.TestCase):
         results = sorted(self.search.query('part_of some GO_0005886'))
         self.assertEqual(len(results), 9)
         go_1518, ids = results[0]
-        self.aseertEqual(go_1518, 'http://identifiers.org/obo.go/GO:0001518')
+        self.assertEqual(go_1518, 'http://identifiers.org/obo.go/GO:0001518')
         self.assertEqual(len(ids), 9)
 
     def test_search_query_translate(self):
