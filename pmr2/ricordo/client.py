@@ -110,6 +110,13 @@ class OwlSparqlClient(SparqlClient):
                 filter regex(?o, "%(keyword)s", "i") .
             }
         """,
+        'url_lookup': """
+            select ?o
+            %(from_graph_statement)s
+            where {
+                <%(iri)s> <http://www.w3.org/2000/01/rdf-schema#label> ?o
+            }
+        """,
     }
 
     def __init__(self, graph_urls=(), *a, **kw):
@@ -135,3 +142,12 @@ class OwlSparqlClient(SparqlClient):
             keyword=keyword.replace('"', '\\"')))
         return sorted([(i['o']['value'], i['s']['value'])
             for i in results['results']['bindings']])
+
+    def get_url_label(self, url, graph_urls=None):
+        """
+        Get the rdfs:label associated with the provided url.
+        """
+
+        results = self.query(self.make_query('url_lookup', graph_urls,
+            iri=url))['results']['bindings']
+        return (results and results[0]['o']['value'] or None)
