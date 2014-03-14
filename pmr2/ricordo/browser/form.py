@@ -10,6 +10,9 @@ from Acquisition import Implicit
 from pmr2.z3cform import form
 from pmr2.z3cform import page
 
+from pmr2.app.settings.interfaces import IPMR2GlobalSettings
+from pmr2.virtuoso.interfaces import IEngine
+
 from pmr2.ricordo.converter import purlobo_to_identifiers
 from pmr2.ricordo.engine import Search
 
@@ -54,8 +57,13 @@ class QueryForm(form.PostForm):
             self.status = self.formErrorsMessage
             return
 
-        # XXX use the persistent registered one?
-        search = Search(owlkb_rdfstore_uri_map=purlobo_to_identifiers)
+        gs = zope.component.getUtility(IPMR2GlobalSettings)
+        settings = zope.component.getAdapter(gs, name='pmr2_virtuoso')
+
+        search = Search(
+            owlkb_rdfstore_uri_map=purlobo_to_identifiers,
+            sparql_endpoint=settings.sparql_endpoint,
+        )
         self.results = search.query(data['query'])
 
 
