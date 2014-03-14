@@ -101,25 +101,28 @@ class RdfStoreClient(SparqlClient):
 
 class OwlSparqlClient(SparqlClient):
 
-    _sparql_query = """
-        select ?s ?o
-        %(from_graph_statement)s
-        where {
-            ?s <http://www.w3.org/2000/01/rdf-schema#label> ?o
-            filter regex(?o, "%(keyword)s", "i") .
-        }
-    """
+    _sparql_query = {
+        'term_lookup': """
+            select ?s ?o
+            %(from_graph_statement)s
+            where {
+                ?s <http://www.w3.org/2000/01/rdf-schema#label> ?o
+                filter regex(?o, "%(keyword)s", "i") .
+            }
+        """,
+    }
 
     def __init__(self, graph_urls=(), *a, **kw):
         self.graph_urls = graph_urls
         super(OwlSparqlClient, self).__init__(*a, **kw)
 
-    def make_query(self, graph_urls, keyword):
-        stmt = '\n'.join(['from <%s>' % g for g in graph_urls])
-        return self._sparql_query % {
-            'from_graph_statement': stmt,
-            'keyword': keyword,
-        }
+    def make_query(self, query_id, graph_urls=None, **kw):
+        if graph_urls is None:
+            graph_urls = self.graph_urls
+
+        graph_stmt = '\n'.join(['from <%s>' % g for g in graph_urls])
+        kw['from_graph_statement'] = graph_stmt
+        return self._sparql_query[query_id] % kw
 
     def get_owl_terms(self, keyword, graph_urls=None):
         """
@@ -128,9 +131,7 @@ class OwlSparqlClient(SparqlClient):
         their data against.
         """
 
-        if graph_urls is None:
-            graph_urls = self.graph_urls
-
-        results = self.query(self.make_query(graph_urls, keyword))
+        results = self.query(self.make_query('term_lookup', graph_urls,
+            keyword=keyword.replace('"', '\\"')))
         return sorted([(i['o']['value'], i['s']['value'])
             for i in results['results']['bindings']])
