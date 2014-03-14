@@ -12,6 +12,7 @@ class Search(object):
             owlkb_graphs=(),
             owlgraph_owlkb_uri_map=None,
             owlkb_rdfstore_uri_map=None,
+            rdfstore_owlkb_uri_map=None,
         ):
         """
         Instantiate a search object instance, with the end points as
@@ -30,18 +31,23 @@ class Search(object):
               OWLKB as specified.  Consult setup and installation
               instructions.
         owlgraph_owlkb_uri_map
+            - not really supported yet.
         owlkb_rdfstore_uri_map
+        rdfstore_owlkb_uri_map
             - in the case that URL in the ontology not matching what was
               used to annotate the data stored in the RDF graphs, an
               optional converter can be constructed and provided.
+            - the inverse will be used for the label lookup.
         """
 
         self.owlkb = client.OwlkbClient(owlkb_endpoint)
         self.rdfstore = client.RdfStoreClient(sparql_endpoint)
-        self.owls = client.OwlSparqlClient(sparql_endpoint, owlkb_graphs)
+        self.owls = client.OwlSparqlClient(owlkb_graphs,
+            endpoint=sparql_endpoint)
 
         self.owlgraph_owlkb_uri_map = owlgraph_owlkb_uri_map
         self.owlkb_rdfstore_uri_map = owlkb_rdfstore_uri_map
+        self.rdfstore_owlkb_uri_map = rdfstore_owlkb_uri_map
 
     def query(self, query, method='getResourceForAnnotation'):
         """
@@ -71,3 +77,11 @@ class Search(object):
 
     def get_owl_terms(self, keyword, graph_urls=None):
         return self.owls.get_owl_terms(keyword, graph_urls)
+
+    def get_owl_url_label(self, url, graph_urls=None):
+        if self.rdfstore_owlkb_uri_map:
+            mapped = self.rdfstore_owlkb_uri_map(url)
+            if mapped:
+                url = mapped[0]
+
+        return self.owls.get_url_label(url, graph_urls)

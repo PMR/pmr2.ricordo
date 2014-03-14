@@ -14,6 +14,7 @@ from pmr2.app.settings.interfaces import IPMR2GlobalSettings
 from pmr2.virtuoso.interfaces import IEngine
 
 from pmr2.ricordo.converter import purlobo_to_identifiers
+from pmr2.ricordo.converter import identifiers_to_purlobo
 from pmr2.ricordo.engine import Search
 
 
@@ -60,8 +61,9 @@ class QueryForm(form.PostForm):
         gs = zope.component.getUtility(IPMR2GlobalSettings)
         settings = zope.component.getAdapter(gs, name='pmr2_virtuoso')
 
-        search = Search(
+        self.search = Search(
             owlkb_rdfstore_uri_map=purlobo_to_identifiers,
+            rdfstore_owlkb_uri_map=identifiers_to_purlobo,
             sparql_endpoint=settings.sparql_endpoint,
         )
         self.results = search.query(data['query'])

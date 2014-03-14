@@ -1,6 +1,7 @@
 import unittest
 
 from pmr2.ricordo.converter import purlobo_to_identifiers
+from pmr2.ricordo.converter import identifiers_to_purlobo
 from pmr2.ricordo.engine import Search
 
 from .base import owlkb_test_available
@@ -19,7 +20,10 @@ class SearchEngineTestCase(unittest.TestCase):
     level = 10
 
     def setUp(self):
-        self.search = Search(owlkb_rdfstore_uri_map=purlobo_to_identifiers)
+        self.search = Search(
+            owlkb_rdfstore_uri_map=purlobo_to_identifiers,
+            rdfstore_owlkb_uri_map=identifiers_to_purlobo,
+        )
 
     def test_search_query_base(self):
         results = sorted(self.search.query('part_of some GO_0005886'))
@@ -27,3 +31,12 @@ class SearchEngineTestCase(unittest.TestCase):
         go_1518, ids = results[0]
         self.assertEqual(go_1518, 'http://identifiers.org/obo.go/GO:0001518')
         self.assertEqual(len(ids), 9)
+
+    def test_get_url_label(self):
+        label = self.search.get_owl_url_label(
+            'http://identifiers.org/obo.go/GO:0005886')
+        self.assertEqual(label, 'plasma membrane')
+
+        label = self.search.get_owl_url_label(
+            'http://identifiers.org/go/GO:0005886')
+        self.assertEqual(label, 'plasma membrane')
