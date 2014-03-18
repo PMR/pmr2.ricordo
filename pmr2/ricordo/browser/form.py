@@ -6,6 +6,7 @@ import z3c.form.field
 from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
 from Acquisition import Implicit
+from Products.CMFCore.utils import getToolByName
 
 from pmr2.z3cform import form
 from pmr2.z3cform import page
@@ -60,12 +61,45 @@ class QueryForm(form.PostForm):
 
         gs = zope.component.getUtility(IPMR2GlobalSettings)
         settings = zope.component.getAdapter(gs, name='pmr2_virtuoso')
+        self.graph_prefix = settings.graph_prefix
+        self.portal_url = getToolByName(self.context, 'portal_url'
+            ).getPortalObject().absolute_url()
+        self.portal_catalog = getToolByName(self.context, 'portal_catalog')
 
         self.search = Search(
             owlkb_rdfstore_uri_map=purlobo_to_identifiers,
             rdfstore_owlkb_uri_map=identifiers_to_purlobo,
             sparql_endpoint=settings.sparql_endpoint,
         )
-        self.results = search.query(data['query'])
+        self._results = self.search.query(data['query'])
 
+    def resolve_obj(self, graph_iri):
+        brain = self.portal_catalog(path=graph_iri.replace(
+            self.graph_prefix, '', 1))
+        if brain:
+            return brain[0]
+        return {}
 
+    def results(self):
+        self.others = []
+        for url, items in self._results:
+            label = self.search.get_owl_url_label(url)
+            if label:
+                # convert graph value into instance-local type.
+                items = (
+                    {
+                        'source': i['g']['value'].replace(
+                            self.graph_prefix, self.portal_url, 1),
+                        'value': i['r']['value'],
+                        'obj': self.resolve_obj(i['g']['value']),
+                    }
+                    for i in items if i['g']['value'].startswith(
+                        self.graph_prefix)
+                )
+                yield {
+                    'label': label,
+                    'label_src': url,
+                    'items': items,
+                }
+            else:
+                self.others.append((url, items))

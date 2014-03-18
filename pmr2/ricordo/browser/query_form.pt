@@ -36,9 +36,25 @@
 
     <metal:block fill-slot="formbottom">
 
-      <tal:if tal:condition="view/results">
-        <div tal:content="view/results">
-        </div>
+      <tal:if tal:condition="exists:view/_results">
+        <dl>
+          <tal:loop tal:repeat="result view/results">
+            <dt>
+              <span tal:content="result/label"></span> -
+              (<a tal:attributes="href result/label_src"
+                tal:content="result/label_src"></a>)
+            </dt>
+            <dd>
+              <ul>
+                <li tal:repeat="item result/items">
+                  <a tal:attributes="href item/source"
+                      tal:content="item/obj/Title | item/source"></a> -
+                    <span tal:content="item/value"></span>
+                </li>
+              </ul>
+            </dd>
+          </tal:loop>
+        <dl>
       </tal:if>
 
       <span tal:replace="structure context/@@authenticator/authenticator"/>
