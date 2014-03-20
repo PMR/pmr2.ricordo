@@ -10,6 +10,7 @@ class Converter(object):
         return [rule.sub(replacement, identifier) for rule, replacement in
             self.compiled_rules if rule.search(identifier)]
 
+# purl.org/obo/* to identifiers.org/obo/*
 purlobo_to_identifiers = Converter((
     ('^http://purl.org/obo/owlapi/gene_ontology#GO_([0-9]{7})$',
         'http://identifiers.org/obo.go/GO:\\1'),
@@ -21,11 +22,7 @@ purlobo_to_identifiers = Converter((
         'http://identifiers.org/fma/FMA:\\1'),
 ))
 
-purlobo_to_owlkb = Converter((
-    ('http://purl.org/obo/owlapi/gene_ontology#GO_([0-9]{7})', 'GO_\\1'),
-    ('http://purl.org/obo/owlapi/fma#FMA_([0-9]*)', 'FMA_\\1'),
-))
-
+# inverse of the above.
 identifiers_to_purlobo = Converter((
     ('^http://identifiers.org/obo.go/GO:([0-9]{7})$',
         'http://purl.org/obo/owlapi/gene_ontology#GO_\\1'),
@@ -35,4 +32,18 @@ identifiers_to_purlobo = Converter((
         'http://purl.org/obo/owlapi/fma#FMA_\\1'),
     ('^http://identifiers.org/fma/FMA:([0-9]*)$',
         'http://purl.org/obo/owlapi/fma#FMA_\\1'),
+))
+
+# purl.org/obo to RICORDO-OWLKB contracted form.
+
+purlobo_to_owlkb = Converter((
+    ('http://purl.org/obo/owlapi/gene_ontology#GO_([0-9]{7})', 'GO_\\1'),
+    ('http://purl.org/obo/owlapi/fma#FMA_([0-9]*)', 'FMA_\\1'),
+))
+
+# inverse of the above
+
+purlobo_to_owlkb = Converter((
+    ('^GO_([0-9]{7})$', 'http://purl.org/obo/owlapi/gene_ontology#GO_\\1'),
+    ('^FMA_([0-9]*)$', 'http://purl.org/obo/owlapi/fma#FMA_\\1'),
 ))
