@@ -18,7 +18,7 @@ class LiveOwlClientTestCase(unittest.TestCase):
     defined as the actilve knowledgebase.
     """
 
-    level = 10
+    level = 20
 
     def setUp(self):
         self.client = client.OwlkbClient()
@@ -32,7 +32,45 @@ class LiveOwlClientTestCase(unittest.TestCase):
         self.assertTrue(len(results) > 1)
 
 
-@unittest.skipUnless(rdfstore_test_available(),
+@unittest.skipUnless(virtuoso_test_available(),
+        "Virtuoso is not running")
+class LiveSimpleOwlClientTestCase(unittest.TestCase):
+    """
+    Test cases that requires Tomcat running with the RICORDO owlkb
+    webservices installed and running with the Gene Ontology (go.owl)
+    defined as the actilve knowledgebase.
+    """
+
+    level = 10
+
+    def setUp(self):
+        self.client = client.SimpleOwlkbClient()
+
+    def test_query(self):
+        results = self.client.query_terms(
+            'http://purl.org/obo/owlapi/fma#FMA_9611')
+        self.assertEqual(sorted(results), [
+            'http://purl.org/obo/owlapi/fma#FMA_24474',
+            'http://purl.org/obo/owlapi/fma#FMA_24475',
+            'http://purl.org/obo/owlapi/fma#FMA_9611',
+        ])
+
+    def test_query_short_go(self):
+        results = self.client.query_terms('GO_0005886')
+        # Instead of 3 results, only 2 as we don't provide the dummy
+        # 'Nothing' value.
+        self.assertEqual(len(results), 2)
+
+    def test_query_short_fma(self):
+        results = self.client.query_terms('FMA_9611')
+        self.assertEqual(sorted(results), [
+            'http://purl.org/obo/owlapi/fma#FMA_24474',
+            'http://purl.org/obo/owlapi/fma#FMA_24475',
+            'http://purl.org/obo/owlapi/fma#FMA_9611',
+        ])
+
+
+@unittest.skipUnless(virtuoso_test_available(),
         "Ricordo RDFStore endpoint not running.")
 class LiveRicordoClientTestCase(unittest.TestCase):
     """

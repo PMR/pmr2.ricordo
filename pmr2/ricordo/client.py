@@ -5,6 +5,7 @@ import requests
 import json
 
 from pmr2.virtuoso.sparql import quote_iri
+from pmr2.ricordo.converter import purlobo_to_owlkb
 
 
 def load_queries(target_dir):
@@ -81,6 +82,35 @@ class OwlkbClient(RicordoClient):
     def query_terms(self, query):
         return [i['id'] for i in self.get(query=query, endpoint='terms').get(
             'terms', {}).get('terms', [])]
+
+
+class SimpleOwlkbClient(SparqlClient):
+    """
+    Stripped down client that emulates the owl knowledge for the most
+    basic query, i.e. without the manchester style support and the
+    deeper more resource intensive description logic reasoning.
+    """
+
+    _subclass_query = '''
+    SELECT ?s WHERE {
+        ?s <http://www.w3.org/2000/01/rdf-schema#subClassOf> %(iri)s .
+    }
+    '''
+
+    def query_terms(self, query):
+        iri = purlobo_to_owlkb(query)
+        if iri:
+            # should only be one.
+            iri = iri[0]
+        else:
+            # leave as unconverted
+            iri = query
+        t = self._subclass_query % {'iri': '<%s>' % quote_iri(iri)}
+        # include the original term as that's what user wants to query.
+        result = [iri]
+        result.extend((i['s']['value'] for i in
+            self.query(t).get('results', {}).get('bindings')))
+        return result
 
 
 class RdfStoreClient(SparqlClient):

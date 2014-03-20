@@ -7,8 +7,8 @@ class Search(object):
     """
 
     def __init__(self,
-            owlkb_endpoint='http://localhost:8080/ricordo-owlkb-ws/service',
             sparql_endpoint='http://localhost:8890/sparql',
+            owlkb_endpoint=None,
             owlkb_graphs=(),
             owlgraph_owlkb_uri_map=None,
             owlkb_rdfstore_uri_map=None,
@@ -19,7 +19,10 @@ class Search(object):
         specified.
 
         owlkb_endpoint
-            - the end point to the RICORDO OWLKB webservice.
+            - the endpoint for the owl reasoning engine.  If specified
+              it must point to the endpoint for the RICORDO OWLKB
+              webservice.  Defaults to a simpler service that relies on
+              the SPQRAL endpoint.
         rdfstore_endpoint
             - the endpoint to the RICORDO RDFStore webservice.
         owl_sparql_endpoint
@@ -40,7 +43,10 @@ class Search(object):
             - the inverse will be used for the label lookup.
         """
 
-        self.owlkb = client.OwlkbClient(owlkb_endpoint)
+        if owlkb_endpoint:
+            self.owlkb = client.OwlkbClient(owlkb_endpoint)
+        else:
+            self.owlkb = client.SimpleOwlkbClient(sparql_endpoint)
         self.rdfstore = client.RdfStoreClient(sparql_endpoint)
         self.owls = client.OwlSparqlClient(owlkb_graphs,
             endpoint=sparql_endpoint)
