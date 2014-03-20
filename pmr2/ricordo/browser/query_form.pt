@@ -20,13 +20,16 @@
         </label>
 
         <div class="formHelp">
-          This is a helper builds a Manchester styled query below from the
-          following template.
+          This is a helper to get you the intended ontological term from
+          the available ontologies in the rdfstore.  Please select build
+          query once you constructed your query.
          </div>
 
         <div class="widget">
+          <!--
           <input type="text" name="relation" class="queryrelation" autocomplete="off" />
           some
+          -->
           <input type="text" name="term" class="queryterm" autocomplete="off" />
           <button type="button" id="btnBuildQuery" class="btn">Build Query</button>
         </div>
@@ -36,26 +39,24 @@
 
     <metal:block fill-slot="formbottom">
 
-      <tal:if tal:condition="exists:view/_results">
-        <dl>
-          <tal:loop tal:repeat="result view/results">
-            <dt>
-              <span tal:content="result/label"></span> -
-              (<a tal:attributes="href result/label_src"
-                tal:content="result/label_src"></a>)
-            </dt>
-            <dd>
-              <ul>
-                <li tal:repeat="item result/items">
-                  <a tal:attributes="href item/source"
-                      tal:content="item/obj/Title | item/source"></a> -
-                    <span tal:content="item/value"></span>
-                </li>
-              </ul>
-            </dd>
-          </tal:loop>
-        <dl>
-      </tal:if>
+      <dl>
+        <tal:loop tal:repeat="result view/results">
+          <dt>
+            <span tal:content="result/label"></span> -
+            (<a tal:attributes="href result/label_src"
+              tal:content="result/label_src"></a>)
+          </dt>
+          <dd>
+            <ul>
+              <li tal:repeat="item result/items">
+                <a tal:attributes="href item/source"
+                    tal:content="item/obj/Title | item/source"></a> -
+                  <span tal:content="item/value"></span>
+              </li>
+            </ul>
+          </dd>
+        </tal:loop>
+      <dl>
 
       <span tal:replace="structure context/@@authenticator/authenticator"/>
 

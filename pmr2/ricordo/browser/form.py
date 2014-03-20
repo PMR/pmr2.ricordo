@@ -46,7 +46,7 @@ class QueryForm(form.PostForm):
     template = ViewPageTemplateFile('query_form.pt')
     ignoreContext = True
 
-    results = None
+    _results = None
 
     @z3c.form.button.buttonAndHandler(u'Search', name='search')
     def handleSearch(self, action):
