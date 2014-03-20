@@ -14,10 +14,12 @@ class OwlSparqlPage(TraversePage, JsonPage):
 
     json_mimetype = 'application/json'
 
-    client = OwlSparqlClient(graph_urls=(
-        'http://models.example.com/go.owl',
-        'http://models.example.com/fma.owl',
-    ))
+    #client = OwlSparqlClient(graph_urls=(
+    #    'http://models.example.com/go.owl',
+    #    'http://models.example.com/fma.owl',
+    #))
+
+    client = OwlSparqlClient()
 
     def render(self):
         try:
