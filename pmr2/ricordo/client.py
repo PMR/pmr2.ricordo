@@ -138,7 +138,7 @@ class OwlSparqlClient(SparqlClient):
             where {
                 ?s <http://www.w3.org/2000/01/rdf-schema#label> ?o
                 filter regex(?o, "%(keyword)s", "i") .
-            }
+            } %(limit)s
         """,
         'url_lookup': """
             select ?o
@@ -161,15 +161,18 @@ class OwlSparqlClient(SparqlClient):
         kw['from_graph_statement'] = graph_stmt
         return self._sparql_query[query_id] % kw
 
-    def get_owl_terms(self, keyword, graph_urls=None):
+    def get_owl_terms(self, keyword, limit=None, graph_urls=None):
         """
         Method to provide the labels and the associated identifier for
         the terms within the selected ontologies users will be searching
         their data against.
         """
 
+        limit = limit and ('limit %d' % limit) or ''
         results = self.query(self.make_query('term_lookup', graph_urls,
-            keyword=keyword.replace('"', '\\"')))
+            keyword=keyword.replace('"', '\\"'),
+            limit=limit,
+        ))
         return sorted([(i['o']['value'], i['s']['value'])
             for i in results['results']['bindings']])
 

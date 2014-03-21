@@ -29,3 +29,22 @@ class LiveOwlSparqlClientTestCase(ptc.FunctionalTestCase):
         self.page.publishTraverse(self.page.request, 'plasma membrane')
         results = json.loads(self.page())
         self.assertEqual(len(results['results']), 230)
+
+    def test_query_limit(self):
+        self.page.publishTraverse(self.page.request, 'plasma membrane')
+        self.page.publishTraverse(self.page.request, '10')
+        results = json.loads(self.page())
+        self.assertEqual(len(results['results']), 10)
+
+    def test_query_final_not_int(self):
+        self.page.publishTraverse(self.page.request, 'dorsal')
+        self.page.publishTraverse(self.page.request, 'ventral')
+        results = json.loads(self.page())
+        self.assertEqual(len(results['results']), 30)
+
+    def test_query_multi_slash(self):
+        self.page.publishTraverse(self.page.request, 'dorsal')
+        self.page.publishTraverse(self.page.request, 'ventral')
+        self.page.publishTraverse(self.page.request, '10')
+        results = json.loads(self.page())
+        self.assertEqual(len(results['results']), 10)

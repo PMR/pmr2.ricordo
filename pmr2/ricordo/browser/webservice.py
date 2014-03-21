@@ -22,8 +22,18 @@ class OwlSparqlPage(TraversePage, JsonPage):
     client = OwlSparqlClient()
 
     def render(self):
+        limit = None
+        if len(self.traverse_subpath) > 1:
+            # assume the final element is number of desired elements.
+            try:
+                limit = int(self.traverse_subpath[-1])
+                # got the element, pop that off.
+                self.traverse_subpath.pop()
+            except ValueError:
+                pass
+
         try:
-            results = self.client.get_owl_terms(self.url_subpath)
+            results = self.client.get_owl_terms(self.url_subpath, limit=limit)
         except:
             results = []
             logger.exception('failed to get owl terms')
