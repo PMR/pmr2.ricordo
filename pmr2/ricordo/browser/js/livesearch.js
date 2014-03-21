@@ -58,6 +58,8 @@ var relations = [
     "part_of (PATO)"
 ];
 
+var max_terms = 32;
+
 $(document).ready(function () {
 
     $(".queryrelation").typeahead({
@@ -71,7 +73,7 @@ $(document).ready(function () {
         source: suggestTerms,
         matcher: function(term) { return true; },
         updater: updateTermSelection,
-        items: 32,
+        items: max_terms,
         minLength: 2
     });
 
@@ -97,7 +99,8 @@ function suggestTerms(query, process) {
 
 function getTerms(query, process) {
     target = window.location.href.toString().replace(
-        /pmr2_ricordo\/query.*/, 'pmr2_ricordo/owlterms/') + query;
+        /pmr2_ricordo\/query.*/,
+        'pmr2_ricordo/owlterms/') + query + '/' + max_terms;
     console.log(target);
     $.getJSON(target, function(data) {
         var items = [];
