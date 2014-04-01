@@ -26,6 +26,13 @@
       permission="zope2.View"
       />
 
+  <browser:page
+      for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+      name="pmr2_ricordo_config"
+      class=".form.RicordoConfigEditForm"
+      permission="cmf.ManagePortal"
+      />
+
   <browser:resourceDirectory
       name="pmr2.ricordo.js"
       directory="js"

@@ -14,6 +14,7 @@ from pmr2.z3cform import page
 from pmr2.app.settings.interfaces import IPMR2GlobalSettings
 from pmr2.virtuoso.interfaces import IEngine
 
+from pmr2.ricordo.interfaces import IRicordoConfig
 from pmr2.ricordo.converter import purlobo_to_identifiers
 from pmr2.ricordo.converter import identifiers_to_purlobo
 from pmr2.ricordo.engine import Search
@@ -62,11 +63,17 @@ class QueryForm(form.PostForm):
         gs = zope.component.getUtility(IPMR2GlobalSettings)
         settings = zope.component.getAdapter(gs, name='pmr2_virtuoso')
         self.graph_prefix = settings.graph_prefix
-        self.portal_url = getToolByName(self.context, 'portal_url'
-            ).getPortalObject().absolute_url()
+        portal = getToolByName(self.context, 'portal_url').getPortalObject()
+        self.portal_url = portal.absolute_url()
         self.portal_catalog = getToolByName(self.context, 'portal_catalog')
 
+        ricordo_config = zope.component.queryAdapter(portal, IRicordoConfig)
+        owl_urls = ricordo_config is not None and ricordo_config.owl_urls or ()
+
+        self.portal_url = getToolByName(self.context, 'portal_url'
+            ).getPortalObject().absolute_url()
         self.search = Search(
+            owlkb_graphs=owl_urls,
             owlkb_rdfstore_uri_map=purlobo_to_identifiers,
             rdfstore_owlkb_uri_map=identifiers_to_purlobo,
             sparql_endpoint=settings.sparql_endpoint,
@@ -86,7 +93,7 @@ class QueryForm(form.PostForm):
             label = self.search.get_owl_url_label(url)
             if label:
                 # convert graph value into instance-local type.
-                items = (
+                items_i = (
                     {
                         'source': i['g']['value'].replace(
                             self.graph_prefix, self.portal_url, 1),
@@ -99,7 +106,16 @@ class QueryForm(form.PostForm):
                 yield {
                     'label': label,
                     'label_src': url,
-                    'items': items,
+                    'items': items_i,
                 }
             else:
                 self.others.append((url, items))
+
+
+class RicordoConfigEditForm(form.EditForm):
+
+    fields = z3c.form.field.Fields(IRicordoConfig)
+
+    def getContent(self):
+        return zope.component.getAdapter(self.context, IRicordoConfig)
+

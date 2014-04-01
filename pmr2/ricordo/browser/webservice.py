@@ -1,11 +1,14 @@
 import json
 import logging
 
+import zope.component
 from zope.publisher.browser import BrowserPage
+from Products.CMFCore.utils import getToolByName
 
 from pmr2.z3cform.page import TraversePage
 from pmr2.json.mixin import JsonPage
 from pmr2.ricordo.client import OwlSparqlClient
+from pmr2.ricordo.interfaces import IRicordoConfig
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +22,6 @@ class OwlSparqlPage(TraversePage, JsonPage):
     #    'http://models.example.com/fma.owl',
     #))
 
-    client = OwlSparqlClient()
 
     def render(self):
         limit = None
@@ -32,8 +34,12 @@ class OwlSparqlPage(TraversePage, JsonPage):
             except ValueError:
                 pass
 
+        portal = getToolByName(self.context, 'portal_url').getPortalObject()
+        ricordo_config = zope.component.queryAdapter(portal, IRicordoConfig)
+        owl_urls = ricordo_config is not None and ricordo_config.owl_urls or ()
         try:
-            results = self.client.get_owl_terms(self.url_subpath, limit=limit)
+            client = OwlSparqlClient(graph_urls=owl_urls)
+            results = client.get_owl_terms(self.url_subpath, limit=limit)
         except:
             results = []
             logger.exception('failed to get owl terms')

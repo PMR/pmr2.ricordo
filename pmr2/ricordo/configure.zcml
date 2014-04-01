@@ -6,4 +6,10 @@
   <include package=".browser" />
   <include file="profiles.zcml" />
 
+  <adapter
+      for="zope.annotation.interfaces.IAnnotatable"
+      factory=".annotations.RicordoConfigFactory"
+      provides=".interfaces.IRicordoConfig"
+      />
+
 </configure>
