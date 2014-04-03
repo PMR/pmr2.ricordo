@@ -1,8 +1,9 @@
 Changelog
 =========
 
-0.0-dev (unreleased)
---------------------
+0.1 - 2014-04-03
+----------------
 
-- Package created using templer
-  [Tommy Yu]
+- Support for the core RICORDO features (without description logic
+  reasoning) added.  This includes the core SPARQL queries with
+  modifications surrounding the usage of RDF graphs.
