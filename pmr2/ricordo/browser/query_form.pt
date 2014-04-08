@@ -49,7 +49,7 @@
           <dd>
             <ul>
               <li tal:repeat="item result/items">
-                <a tal:attributes="href item/source"
+                <a tal:attributes="href item/obj/getURL"
                     tal:content="item/obj/Title | item/source"></a> -
                   <span tal:content="item/value"></span>
               </li>
