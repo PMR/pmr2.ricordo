@@ -14,6 +14,10 @@ from pmr2.ricordo.interfaces import IRicordoConfig
 class RicordoConfig(Persistent, Contained):
 
     owl_urls = fieldproperty.FieldProperty(IRicordoConfig['owl_urls'])
+    owl_labels = fieldproperty.FieldProperty(IRicordoConfig['owl_labels'])
+
+    def get_graphs(self):
+        return zip(self.owl_urls or [], self.owl_labels or [])
 
 
 RicordoConfigFactory = factory(RicordoConfig)

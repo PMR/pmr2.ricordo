@@ -19,3 +19,12 @@ class IRicordoConfig(zope.interface.Interface):
         )
     )
 
+    owl_labels = zope.schema.List(
+        title=u'OWL Labels',
+        description=u'Labels are joined with the URLs.',
+        required=False,
+        value_type=zope.schema.TextLine(
+            title=u'Label',
+        ),
+    )
+

@@ -3,6 +3,8 @@ import zope.interface
 import zope.schema
 import z3c.form
 import z3c.form.field
+from z3c.form.interfaces import ISubForm
+from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
 from Acquisition import Implicit
@@ -29,6 +31,22 @@ class IQueryForm(zope.interface.Interface):
     )
 
 
+class IBaseTermForm(zope.interface.Interface):
+
+    term = zope.schema.TextLine(
+        title=u'Term',
+        description=u'',
+        required=False,
+    )
+
+    ontologies = zope.schema.List(
+        title=u'Ontologies',
+        description=u'Choose the ontologies to be used',
+        required=False,
+        value_type=zope.schema.Choice(vocabulary='pmr2.ricordo.ontologies'),
+    )
+
+
 class RootView(Implicit, page.SimplePage):
 
     template = ViewPageTemplateFile('query_listing.pt')
@@ -41,6 +59,13 @@ class RootView(Implicit, page.SimplePage):
         return self
 
 
+class BaseTermForm(form.PostForm):
+
+    fields = z3c.form.field.Fields(IBaseTermForm)
+    fields['ontologies'].widgetFactory = CheckBoxFieldWidget
+    ignoreContext = True
+
+
 class QueryForm(form.PostForm):
 
     fields = z3c.form.field.Fields(IQueryForm)
@@ -48,6 +73,12 @@ class QueryForm(form.PostForm):
     ignoreContext = True
 
     _results = ()
+
+    def update(self):
+        super(QueryForm, self).update()
+        form = BaseTermForm(self.context, self.request)
+        zope.interface.alsoProvides(form, ISubForm)
+        self.base_term_form = form
 
     @z3c.form.button.buttonAndHandler(u'Search', name='search')
     def handleSearch(self, action):
