@@ -35,6 +35,9 @@
         </div>
       </div>
 
+      <tal:block tal:content="structure view/base_term_form">
+      </tal:block>
+
     </metal:block>
 
     <metal:block fill-slot="formbottom">
@@ -49,7 +52,7 @@
           <dd>
             <ul>
               <li tal:repeat="item result/items">
-                <a tal:attributes="href item/source"
+                <a tal:attributes="href item/source | item/obj/getURL"
                     tal:content="item/obj/Title | item/source"></a> -
                   <span tal:content="item/value"></span>
               </li>

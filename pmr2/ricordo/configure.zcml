@@ -12,4 +12,10 @@
       provides=".interfaces.IRicordoConfig"
       />
 
+  <utility
+      provides="zope.schema.interfaces.IVocabularyFactory"
+      component=".vocab.OntologyGraphVocabFactory"
+      name="pmr2.ricordo.ontologies"
+      />
+
 </configure>
