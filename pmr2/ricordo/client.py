@@ -4,6 +4,7 @@ from glob import glob
 import requests
 import json
 
+from pmr2.virtuoso.client import SparqlClient
 from pmr2.virtuoso.sparql import quote_iri
 from pmr2.ricordo.converter import purlobo_to_owlkb
 
@@ -25,29 +26,10 @@ _load()
 del _load
 
 
-class SparqlClient(object):
-    """
-    A client for accessing the Virtuoso Sparql webservice endpoint.
-    """
-
-    def __init__(self, endpoint='http://localhost:8890/sparql',
-            requests_session=None):
-
-        if requests_session is None:
-            requests_session = requests.Session()
-
-        self.endpoint = endpoint
-        self.requests_session = requests_session
-
-    def query(self, sparql_query):
-        r = self.requests_session.get(self.endpoint, params={
-            'query': sparql_query,
-            'format': 'application/json',
-        })
-        return r.json()
-
-
 class RicordoClient(object):
+    """
+    Client that access the Ricordo web services (Tomcat version).
+    """
 
     def __init__(self, root_endpoint, requests_session=None):
         self.root_endpoint = root_endpoint
