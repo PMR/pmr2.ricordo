@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.x - Unreleased
+----------------
+
+- Moved the Virtuoso JSON client class to pmr2.virtuoso.
+
 0.1.1 - 2014-05-22
 ------------------
 
