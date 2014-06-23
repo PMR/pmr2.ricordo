@@ -20,6 +20,13 @@
       />
 
   <browser:page
+      for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+      name="map_query"
+      class=".mapclient.QueryForm"
+      permission="zope2.View"
+      />
+
+  <browser:page
       for=".form.RootView"
       name="owlterms"
       class=".webservice.OwlSparqlPage"
