@@ -85,6 +85,13 @@ $(document).ready(function () {
         $('#form-widgets-query').val(result);
     });
 
+    hookOwlInput(
+        "#form-widgets-ontological_term",
+        window.location.href.toString().replace(
+            /map_query.*/, 'pmr2_ricordo/owlterms/'),
+        updateMapClientTermSelection
+    );
+
 });
 
 function hookOwlInput(selector, target_base, updater) {
@@ -126,6 +133,21 @@ function getTerms(target_base, query, process) {
 function updateTermSelection(item) {
     selectedTerm = item.replace(/[^(]*\((.*)\)/, '$1');
     return item;
+}
+
+function updateMapClientTermSelection(item) {
+    selectedTerm = item.replace(/[^(]*\((.*)\)/, '$1');
+    div = $("#mapclient-term-details");
+    if (div.length == 0) {
+        // create the element
+        console.log('create');
+        $("#form-widgets-ontological_term").parent().append(
+            '<span id="mapclient-term-details"></span>');
+        div = $("#mapclient-term-details");
+    }
+    div.text(item);
+    console.log(div);
+    return selectedTerm;
 }
 
 

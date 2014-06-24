@@ -58,16 +58,13 @@ class IQueryForm(zope.interface.Interface):
 class QueryForm(form.PostForm):
 
     fields = z3c.form.field.Fields(IQueryForm)
-    template = ViewPageTemplateFile('query_form.pt')
     ignoreContext = True
 
     results = ()
 
     def update(self):
         super(QueryForm, self).update()
-        form = BaseTermForm(self.context, self.request)
-        zope.interface.alsoProvides(form, ISubForm)
-        self.base_term_form = form
+        self.request['disable_border'] = 1
 
     @z3c.form.button.buttonAndHandler(u'Search', name='search')
     def handleSearch(self, action):
