@@ -70,7 +70,8 @@ $(document).ready(function () {
     });
 
     $(".queryterm").typeahead({
-        source: suggestTerms,
+        source: suggestTerms(window.location.href.toString().replace(
+            /pmr2_ricordo\/query.*/, 'pmr2_ricordo/owlterms/')),
         matcher: function(term) { return true; },
         updater: updateTermSelection,
         items: max_terms,
@@ -88,19 +89,20 @@ $(document).ready(function () {
 
 });
 
-function suggestTerms(query, process) {
-    setTimeout(function() {
-        if ((query == $(".queryterm").val()) && (query != lastQuery)) {
-            lastQuery = query;
-            getTerms(query, process);
-        }
-    }, 200);
+function suggestTerms(target_base) {
+    suggestion = function(query, process) {
+        setTimeout(function() {
+            if ((query == $(".queryterm").val()) && (query != lastQuery)) {
+                lastQuery = query;
+                getTerms(target_base, query, process);
+            }
+        }, 200);
+    };
+    return suggestion
 }
 
-function getTerms(query, process) {
-    target = window.location.href.toString().replace(
-        /pmr2_ricordo\/query.*/,
-        'pmr2_ricordo/owlterms/') + query + '/' + max_terms;
+function getTerms(target_base, query, process) {
+    target = target_base + query + '/' + max_terms;
     console.log(target);
     $.getJSON(target, function(data) {
         var items = [];
