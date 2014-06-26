@@ -55,13 +55,12 @@ class Search(object):
         self.owlkb_rdfstore_uri_map = owlkb_rdfstore_uri_map
         self.rdfstore_owlkb_uri_map = rdfstore_owlkb_uri_map
 
-    def query(self, query, method='getResourceForAnnotation'):
+    def _generate_terms(self, query):
         """
-        For each ontological term returned by the OWLKB using the query,
-        run a search using the defined method in the RDFStore.
+        A generator of relevant ontological terms for a given query
+        against the stored ontologies (the owl knowledgebase).
         """
 
-        results = []
         if self.owlgraph_owlkb_uri_map:
             subbed_query = self.owlgraph_owlkb_uri_map(query)
             terms = self.owlkb.query_terms(subbed_query)
@@ -69,16 +68,28 @@ class Search(object):
             terms = self.owlkb.query_terms(query)
 
         for term in terms:
+            # expand the result terms against the defined mappings if
+            # available.
             if self.owlkb_rdfstore_uri_map:
-                real_terms = self.owlkb_rdfstore_uri_map(term)
+                for expanded_term in self.owlkb_rdfstore_uri_map(term):
+                    yield expanded_term
             else:
-                # 1-tuple of original term
-                real_terms = (term,)
-            for t in real_terms:
-                items = self.rdfstore.search(target=method, data=t)
-                if not items:
-                    continue
-                results.append((t, items))
+                yield term
+
+    def query(self, query, method='getResourceForAnnotation'):
+        """
+        For each ontological term returned by the OWLKB using the query,
+        run a search using the defined method in the RDFStore.
+        """
+
+        results = []
+
+        for t in self._generate_terms(query):
+            items = self.rdfstore.search(target=method, data=t)
+            if not items:
+                continue
+            results.append((t, items))
+
         return results
 
     def get_owl_terms(self, keyword, graph_urls=None):
