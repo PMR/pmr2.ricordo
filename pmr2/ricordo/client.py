@@ -164,5 +164,5 @@ class OwlSparqlClient(SparqlClient):
         """
 
         results = self.query(self.make_query('url_lookup', graph_urls,
-            iri=url))['results']['bindings']
+            iri=quote_iri(url)))['results']['bindings']
         return (results and results[0]['o']['value'] or None)
