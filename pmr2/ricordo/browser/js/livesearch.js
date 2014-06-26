@@ -142,7 +142,7 @@ function updateTermSelection(item, value) {
     return item;
 }
 
-function updateMapClientTermSelection(item) {
+function updateMapClientTermSelection(item, value) {
     selectedTerm = item.replace(/[^(]*\((.*)\)/, '$1');
     div = $("#mapclient-term-details");
     if (div.length == 0) {
