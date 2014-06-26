@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="plone"
+      metal:use-macro="context/@@pmr2-z3cform-macros/main">
+
+<metal:block fill-slot="main">
+
+  <h1 tal:condition="view/label" class="documentFirstHeading"
+      tal:content="view/label | nothing"/>
+
+  <tal:block metal:use-macro="context/@@ploneform-macros/titlelessform">
+
+    <metal:block fill-slot="formbottom">
+
+      <dl>
+        <tal:loop tal:repeat="result view/results">
+          <dt>
+            <span tal:content="result/label"></span>
+            <tal:if tal:condition="result/label_src">
+              -
+              (<a tal:attributes="href result/label_src"
+                tal:content="result/label_src"></a>)
+            </tal:if>
+          </dt>
+          <dd>
+            <ul>
+              <li tal:repeat="item result/items">
+                <a tal:attributes="href item/source | item/obj/getURL"
+                    tal:content="item/obj/Title | item/source"></a> -
+                  <span tal:content="python: item.items()"></span>
+              </li>
+            </ul>
+          </dd>
+        </tal:loop>
+      <dl>
+
+      <span tal:replace="structure context/@@authenticator/authenticator"/>
+
+    </metal:block>
+
+  </tal:block>
+
+</metal:block>
+
+</html>
