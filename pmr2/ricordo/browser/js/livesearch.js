@@ -95,42 +95,49 @@ $(document).ready(function () {
 });
 
 function hookOwlInput(selector, target_base, updater) {
+    var label_url_map = {};
+    updaterValueAdded = function(item) {
+        value = label_url_map[item];
+        console.log(value);
+        return updater(item, value);
+    };
+
     $(selector).typeahead({
-        source: suggestTerms(selector, target_base),
+        source: suggestTerms(selector, target_base, label_url_map),
         matcher: function(term) { return true; },
-        updater: updater,
+        updater: updaterValueAdded,
         items: max_terms,
         minLength: 2
     });
 }
 
-function suggestTerms(selector, target_base) {
+function suggestTerms(selector, target_base, label_url_map) {
     suggestion = function(query, process) {
         setTimeout(function() {
             if ((query == $(selector).val()) && (query != lastQuery)) {
                 lastQuery = query;
-                getTerms(target_base, query, process);
+                getTerms(target_base, query, process, label_url_map);
             }
         }, 200);
     };
-    return suggestion
+    return suggestion;
 }
 
-function getTerms(target_base, query, process) {
+function getTerms(target_base, query, process, label_url_map) {
     target = target_base + query + '/' + max_terms;
     console.log(target);
     $.getJSON(target, function(data) {
         var items = [];
         $.each(data["results"], function(key, val) {
-            items.push(
-                val[0] + ' (' + val[1].replace(/[^#]*#/, '') + ')'
-            );
+            value = val[0] + ' (' + val[1].replace(/[^#]*#/, '') + ')';
+            items.push(value);
+            label_url_map[value] = val[1];
         })
         process(items);
-    })
+    });
 }
 
-function updateTermSelection(item) {
+function updateTermSelection(item, value) {
     selectedTerm = item.replace(/[^(]*\((.*)\)/, '$1');
     return item;
 }
