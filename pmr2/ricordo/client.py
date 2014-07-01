@@ -139,7 +139,7 @@ class OwlSparqlClient(SparqlClient):
         if graph_urls is None:
             graph_urls = self.graph_urls
 
-        graph_stmt = '\n'.join(['from <%s>' % g for g in graph_urls])
+        graph_stmt = '\n'.join(['from <%s>' % quote_iri(g) for g in graph_urls])
         kw['from_graph_statement'] = graph_stmt
         return self._sparql_query[query_id] % kw
 
