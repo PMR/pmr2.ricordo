@@ -18,7 +18,7 @@ from pmr2.z3cform import page
 from pmr2.app.settings.interfaces import IPMR2GlobalSettings
 from pmr2.virtuoso.interfaces import IEngine
 from pmr2.virtuoso.client import SparqlClient
-from pmr2.virtuoso.sparql import quote_iri
+from pmr2.virtuoso import sparql
 
 from pmr2.ricordo.interfaces import IRicordoConfig
 from pmr2.ricordo.converter import purlobo_to_identifiers
@@ -27,6 +27,15 @@ from pmr2.ricordo.engine import Search
 
 from .form import BaseTermForm
 
+class iristr(unicode):
+    pass
+
+
+def quote_iri(s):
+    if isinstance(s, iristr):
+        # already quoted
+        return s
+    return iristr(sparql.quote_iri(s))
 
 def autowildcard(tokens, fmtstr, **kw):
     try:
@@ -69,36 +78,37 @@ class MAPClientSearch(Search):
                 continue
             token = '?' + k
             tokens.append(token)
-            q = autowildcard(tokens, v, **kwords)
+            q = autowildcard(tokens, v, token=token, **kwords)
             queries.append(q)
         if not tokens:
             return None
-        return self._root_query.format(
+        result = self._root_query.format(
             tokens=' '.join(tokens), queries='\n'.join(queries))
+        return result
 
     def search(self, **kw):
         ontological_term = kw.pop('ontological_term')
-        if not ontological_term:
-            # simple case.
-            q = self.build_query(**kw)
-            # "pretend" this is the case...
-            return [(
-                '(All Terms)',
-                self.owls.query(q).get('results', {}).get('bindings'),
-            )]
 
-        # expand ontological term into all relevant things.
+        if ontological_term and kw.get('workflow_predicate'):
+            results = []
+            for term in self._generate_terms(ontological_term):
+                kw['ontological_term'] = iristr('<%s>' % quote_iri(term))
+                q = self.build_query(**kw)
+                for r in self.owls.query(q).get('results', {}).get('bindings'):
+                    # for now inject the used ontological_term for this query
+                    r['ontological_term'] = {u'type': u'uri', u'value': term,}
+                    results.append(r)
 
-        results = []
-        for term in self._generate_terms(ontological_term):
-            kw['ontological_term'] = '<%s>' % quote_iri(term)
-            q = self.build_query(**kw)
-            results.append((
-                term, 
-                self.owls.query(q).get('results', {}).get('bindings'),
-            ))
+            return results
 
-        return results
+        # simple case.
+        # also filtering out in case of missing workflow_predicate
+        # as we don't have a wildcard query for this.
+        q = self.build_query(**kw)
+        if q is None:
+            return []
+        # "pretend" this is the case...
+        return self.owls.query(q).get('results', {}).get('bindings')
 
 
 class IQueryForm(zope.interface.Interface):
@@ -137,6 +147,7 @@ class QueryForm(form.PostForm):
     template = ViewPageTemplateFile('map_query_form.pt')
 
     _results = ()
+    _searched = False
 
     def update(self):
         super(QueryForm, self).update()
@@ -175,6 +186,7 @@ class QueryForm(form.PostForm):
         )
 
         self._results = self.engine.search(**data)
+        self._searched = True
 
     def resolve_obj(self, graph_iri):
         brain = self.portal_catalog(path=graph_iri.replace(
@@ -183,29 +195,20 @@ class QueryForm(form.PostForm):
             return brain[0]
         return {}
 
-    def _process_items(self, items):
-        for i in items:
-            if not i['g']['value'].startswith(self.graph_prefix):
+    def results(self):
+        for item in self._results:
+            if not item['g']['value'].startswith(self.graph_prefix):
                 continue
 
-            obj = self.resolve_obj(i['g']['value'])
-            d = {k: v['value'] for k, v in i.items() if not k == 'g'}
-            d.update({
-                'source': obj.getURL(),
-                'obj': obj,
-            })
-            yield d
+            obj = self.resolve_obj(item['g']['value'])
+            data = {k: v['value'] for k, v in item.items() if not k == 'g'}
 
-    def results(self):
-        for term_url, items in self._results:
-            #url = item[
-            label = self.engine.get_owl_url_label(term_url)
-            if not label:
-                # assume the term url is actually text.
-                label, term_url = term_url, ''
+            label = data.get('ontological_term', None)
+            data['ontological_label'] = (
+                label and self.engine.get_owl_url_label(label) or '')
 
             yield {
-                'label': label,
-                'label_src': term_url,
-                'items': self._process_items(items),
+                'data': data,
+                'source': obj.getURL(),
+                'obj': obj,
             }

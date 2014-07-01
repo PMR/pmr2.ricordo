@@ -25,10 +25,12 @@ class MapClientTestCase(unittest.TestCase):
             'workflowstep> . } }')
 
     def test_format_query_two(self):
+        ontological_term = mapclient.iristr(
+            '<http://purl.org/obo/owlapi/fma#FMA_24974>')
         self.assertEqual(self.client.build_query(
             workflow_object='workflowstep',
             workflow_predicate='workflowfor',
-            ontological_term='http://purl.org/obo/owlapi/fma#FMA_24974',
+            ontological_term=ontological_term,
         ), 'SELECT ?g ?workflow_object ?workflow_predicate WHERE { GRAPH ?g '
             '{ '
                 '?workflow_object '
@@ -44,7 +46,20 @@ class MapClientTestCase(unittest.TestCase):
         '}')
 
     def test_format_query_missing_term(self):
-        self.assertRaises(LookupError, self.client.build_query,
-            workflow_object='workflowproject',
+        self.assertEqual(self.client.build_query(
+            workflow_object='workflowstep',
             workflow_predicate='workflowfor',
-        )
+        ), 'SELECT ?g ?workflow_object ?workflow_predicate ?ontological_term '
+            'WHERE { GRAPH ?g '
+            '{ '
+                '?workflow_object '
+                '<http://www.w3.org/2000/01/rdf-schema#subClassOf> '
+                '<http://physiomeproject.org/workflow/1.0/rdf-schema#'
+                'workflowstep> .'
+                '\n'
+                '?workflow_predicate '
+                '<http://physiomeproject.org/workflow/1.0/rdf-schema#'
+                'workflowfor> '
+                '?ontological_term . '
+            '} '
+        '}')
