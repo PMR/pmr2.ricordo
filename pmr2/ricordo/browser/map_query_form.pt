@@ -15,21 +15,14 @@
     <metal:block fill-slot="formbottom">
 
       <dl>
-        <tal:loop tal:repeat="result view/results">
+        <tal:loop tal:repeat="item view/results">
           <dt>
-            <span tal:content="result/label"></span>
-            <tal:if tal:condition="result/label_src">
-              -
-              (<a tal:attributes="href result/label_src"
-                tal:content="result/label_src"></a>)
-            </tal:if>
+            <a tal:attributes="href item/source | item/obj/getURL"
+                tal:content="item/obj/Title | item/source"></a>
           </dt>
           <dd>
             <ul>
-              <li tal:repeat="item result/items">
-                <a tal:attributes="href item/source | item/obj/getURL"
-                    tal:content="item/obj/Title | item/source"></a> -
-                  <span tal:content="python: item.items()"></span>
+              <li tal:content="item/data">
               </li>
             </ul>
           </dd>
