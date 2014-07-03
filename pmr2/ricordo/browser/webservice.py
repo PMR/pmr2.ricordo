@@ -8,6 +8,7 @@ from Products.CMFCore.utils import getToolByName
 from pmr2.z3cform.page import TraversePage
 from pmr2.json.mixin import JsonPage
 from pmr2.ricordo.client import OwlSparqlClient
+from pmr2.ricordo.converter import purlobo_to_identifiers
 from pmr2.ricordo.interfaces import IRicordoConfig
 
 logger = logging.getLogger(__name__)
@@ -46,3 +47,19 @@ class OwlSparqlPage(TraversePage, JsonPage):
 
     def render(self):
         return json.dumps({'results': self.results})
+
+
+class MiriamOwlSparqlPage(OwlSparqlPage):
+
+    def render(self):
+        # Format the results to include MIRIAM identifiers.org URLs and
+        # generate dictionaries as output.
+
+        return [
+            {
+                'name': name,
+                'owlapi_url': url,
+                'miriam_url': purlobo_to_identifiers(url)[0],
+            }
+            for name, url in self.results
+        ]
