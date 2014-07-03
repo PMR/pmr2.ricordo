@@ -19,7 +19,7 @@ class ConverterTestCase(unittest.TestCase):
         id_fma = 'http://identifiers.org/fma/FMA:63841'
 
         self.assertEqual(converter.purlobo_to_identifiers(purl_go), [
-            idobo_go, id_go])
+            id_go, idobo_go,])
 
         self.assertEqual(converter.purlobo_to_identifiers(purl_fma), [
-            idobo_fma, id_fma])
+            id_fma, idobo_fma,])
