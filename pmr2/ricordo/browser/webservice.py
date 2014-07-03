@@ -22,8 +22,7 @@ class OwlSparqlPage(TraversePage, JsonPage):
     #    'http://models.example.com/fma.owl',
     #))
 
-
-    def render(self):
+    def update(self):
         limit = None
         if len(self.traverse_subpath) > 1:
             # assume the final element is number of desired elements.
@@ -43,4 +42,7 @@ class OwlSparqlPage(TraversePage, JsonPage):
         except:
             results = []
             logger.exception('failed to get owl terms')
-        return json.dumps({'results': results})
+        self.results = results
+
+    def render(self):
+        return json.dumps({'results': self.results})
