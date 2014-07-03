@@ -6,6 +6,11 @@ Changelog
 
 - Moved the Virtuoso JSON client class to pmr2.virtuoso.
 
+0.1.2 - 2014-07-03
+------------------
+
+- Alternative term lookup provider that includes identifiers.org URL.
+
 0.1.1 - 2014-05-22
 ------------------
 
