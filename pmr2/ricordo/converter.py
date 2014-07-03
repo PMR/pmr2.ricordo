@@ -13,13 +13,13 @@ class Converter(object):
 # purl.org/obo/* to identifiers.org/obo/*
 purlobo_to_identifiers = Converter((
     ('^http://purl.org/obo/owlapi/gene_ontology#GO_([0-9]{7})$',
-        'http://identifiers.org/obo.go/GO:\\1'),
-    ('^http://purl.org/obo/owlapi/gene_ontology#GO_([0-9]{7})$',
         'http://identifiers.org/go/GO:\\1'),
-    ('^http://purl.org/obo/owlapi/fma#FMA_([0-9]*)$',
-        'http://identifiers.org/obo.fma/FMA:\\1'),
+    ('^http://purl.org/obo/owlapi/gene_ontology#GO_([0-9]{7})$',
+        'http://identifiers.org/obo.go/GO:\\1'),
     ('^http://purl.org/obo/owlapi/fma#FMA_([0-9]*)$',
         'http://identifiers.org/fma/FMA:\\1'),
+    ('^http://purl.org/obo/owlapi/fma#FMA_([0-9]*)$',
+        'http://identifiers.org/obo.fma/FMA:\\1'),
 ))
 
 # inverse of the above.
