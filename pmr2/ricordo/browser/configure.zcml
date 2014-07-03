@@ -27,6 +27,13 @@
       />
 
   <browser:page
+      for=".form.RootView"
+      name="miriam_terms"
+      class=".webservice.MiriamOwlSparqlPage"
+      permission="zope2.View"
+      />
+
+  <browser:page
       for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
       name="pmr2_ricordo_config"
       class=".form.RicordoConfigEditForm"
