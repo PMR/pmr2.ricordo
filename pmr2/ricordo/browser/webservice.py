@@ -55,11 +55,11 @@ class MiriamOwlSparqlPage(OwlSparqlPage):
         # Format the results to include MIRIAM identifiers.org URLs and
         # generate dictionaries as output.
 
-        return [
+        return json.dumps({'results': [
             {
                 'name': name,
                 'owlapi_url': url,
                 'miriam_url': purlobo_to_identifiers(url)[0],
             }
             for name, url in self.results
-        ]
+        ]})
