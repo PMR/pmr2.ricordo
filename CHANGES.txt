@@ -6,6 +6,12 @@ Changelog
 
 - Moved the Virtuoso JSON client class to pmr2.virtuoso.
 
+0.1.4 - 2014-07-04
+------------------
+
+- Provide all current identifers.org url translation rules and fallback
+  to null on unknown translated values.
+
 0.1.3 - 2014-07-04
 ------------------
 
