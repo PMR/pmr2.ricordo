@@ -51,6 +51,12 @@ class OwlSparqlPage(TraversePage, JsonPage):
 
 class MiriamOwlSparqlPage(OwlSparqlPage):
 
+    def purlobo_to_identifiers(self, url):
+        results = purlobo_to_identifiers(url)
+        if results:
+            return results[0]
+        return None
+
     def render(self):
         # Format the results to include MIRIAM identifiers.org URLs and
         # generate dictionaries as output.
@@ -59,7 +65,7 @@ class MiriamOwlSparqlPage(OwlSparqlPage):
             {
                 'name': name,
                 'owlapi_url': url,
-                'identifiers_org_uri': purlobo_to_identifiers(url)[0],
+                'identifiers_org_uri': self.purlobo_to_identifiers(url),
             }
             for name, url in self.results
         ]})
