@@ -11,15 +11,33 @@ class ConverterTestCase(unittest.TestCase):
     def test_purlobo_to_identifers(self):
         purl_go = 'http://purl.org/obo/owlapi/gene_ontology#GO_0005886'
         purl_fma = 'http://purl.org/obo/owlapi/fma#FMA_63841'
+        purl_pr = 'http://purl.org/obo/owlapi/pro#PRO_000002023'
+        purl_cl = 'http://purl.org/obo/owlapi/pro#CL_0000017'
+        purl_chebi = 'http://purl.org/obo/owlapi/chebi_ontology#CHEBI_100461'
 
         idobo_go = 'http://identifiers.org/obo.go/GO:0005886'
         idobo_fma = 'http://identifiers.org/obo.fma/FMA:63841'
+        idobo_pr = 'http://identifiers.org/obo.pr/PR:000002023'
+        # idobo_cl = 'http://identifiers.org/obo.cl/CL:0000017'
+        idobo_chebi = 'http://identifiers.org/obo.chebi/CHEBI:100461'
 
         id_go = 'http://identifiers.org/go/GO:0005886'
         id_fma = 'http://identifiers.org/fma/FMA:63841'
+        id_pr = 'http://identifiers.org/pr/PR:000002023'
+        id_cl = 'http://identifiers.org/cl/CL:0000017'
+        id_chebi = 'http://identifiers.org/chebi/CHEBI:100461'
 
         self.assertEqual(converter.purlobo_to_identifiers(purl_go), [
             id_go, idobo_go,])
 
         self.assertEqual(converter.purlobo_to_identifiers(purl_fma), [
             id_fma, idobo_fma,])
+
+        self.assertEqual(converter.purlobo_to_identifiers(purl_pr), [
+            id_pr, idobo_pr,])
+
+        self.assertEqual(converter.purlobo_to_identifiers(purl_cl), [
+            id_cl,])
+
+        self.assertEqual(converter.purlobo_to_identifiers(purl_chebi), [
+            id_chebi, idobo_chebi,])
