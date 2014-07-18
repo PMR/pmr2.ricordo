@@ -201,6 +201,11 @@ class QueryForm(form.PostForm):
                 continue
 
             obj = self.resolve_obj(item['g']['value'])
+
+            if not obj:
+                # either not exist or no permission to access.
+                continue
+
             data = {k: v['value'] for k, v in item.items() if not k == 'g'}
 
             label = data.get('ontological_term', None)
