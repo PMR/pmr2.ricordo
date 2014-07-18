@@ -35,7 +35,7 @@ setup(name='pmr2.ricordo',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
-          'requests'
+          'requests>=1.0.0'
       ],
       entry_points="""
       # -*- Entry points: -*-
