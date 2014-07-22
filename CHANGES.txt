@@ -21,7 +21,6 @@ Changelog
 ------------------
 
 - Alternative term lookup provider that includes identifiers.org URL.
->>>>>>> Changelog
 
 0.1.1 - 2014-05-22
 ------------------
