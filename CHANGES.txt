@@ -6,6 +6,11 @@ Changelog
 
 - Moved the Virtuoso JSON client class to pmr2.virtuoso.
 
+0.1.5 - 2014-07-18
+------------------
+
+- Explicitly specify the minimum requests version needed.
+
 0.1.4 - 2014-07-04
 ------------------
 

@@ -67,13 +67,23 @@ class Search(object):
         else:
             terms = self.owlkb.query_terms(query)
 
+        generated = set()
+
         for term in terms:
             # expand the result terms against the defined mappings if
             # available.
+
+            # XXX refactor the following.
             if self.owlkb_rdfstore_uri_map:
                 for expanded_term in self.owlkb_rdfstore_uri_map(term):
+                    if expanded_term in generated:
+                        continue
+                    generated.add(expanded_term)
                     yield expanded_term
             else:
+                if term in generated:
+                    continue
+                generated.add(term)
                 yield term
 
     def query(self, query, method='getResourceForAnnotation'):

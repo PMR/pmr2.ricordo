@@ -134,10 +134,12 @@ class QueryForm(form.PostForm):
                     for i in items if i['g']['value'].startswith(
                         self.graph_prefix)
                 )
+                indexed_items_i = (i for i in items_i if i['obj'])
+
                 yield {
                     'label': label,
                     'label_src': url,
-                    'items': items_i,
+                    'items': indexed_items_i,
                 }
             else:
                 self.others.append((url, items))
