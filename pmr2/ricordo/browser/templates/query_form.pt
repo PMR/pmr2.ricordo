@@ -52,9 +52,9 @@
           <dd>
             <ul>
               <li tal:repeat="item result/items">
-                <a tal:attributes="href item/obj/getURL | item/source"
-                    tal:content="item/obj/Title | item/source"></a> -
-                  <span tal:content="item/value"></span>
+                <tal:block
+                    tal:content="structure python:view.render_item(item)">
+                </tal:block>
               </li>
             </ul>
           </dd>

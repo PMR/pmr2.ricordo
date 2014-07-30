@@ -73,6 +73,13 @@ class QueryForm(form.PostForm):
     template = ViewPageTemplateFile('query_form.pt')
     ignoreContext = True
 
+    _qr_templates = {
+        'ExposureFile': ViewPageTemplateFile('qr_exposurefile.pt'),
+        'Workspace': ViewPageTemplateFile('qr_workspace.pt'),
+    }
+
+    _qr_default = ViewPageTemplateFile('qr_default.pt')
+
     _results = ()
 
     def update(self):
@@ -119,6 +126,11 @@ class QueryForm(form.PostForm):
             return brain[0]
         return {}
 
+    def render_item(self, item):
+        template = self._qr_templates.get(item['obj'].portal_type,
+            self._qr_default)
+        return template(self, item=item)
+
     def results(self):
         self.others = []
         for url, items in self._results:
@@ -137,6 +149,14 @@ class QueryForm(form.PostForm):
                 )
                 indexed_items_i = (i for i in items_i if i['obj'])
 
+                # TODO figure out how to get the "true" object to be
+                # linked, i.e. exposure items should contain
+                # for exposures
+                # - full description of the object.
+                # - link to the *actual* object of the statement
+                # - backlink to the source (the metadata file)
+                # for workspace
+                # - ?  as is is fine?
                 yield {
                     'label': label,
                     'label_src': url,
