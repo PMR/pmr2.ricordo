@@ -5,7 +5,6 @@ import z3c.form
 import z3c.form.field
 from z3c.form.interfaces import ISubForm
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
-from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
 from Acquisition import Implicit
 from Products.CMFCore.utils import getToolByName
@@ -20,6 +19,8 @@ from pmr2.ricordo.interfaces import IRicordoConfig
 from pmr2.ricordo.converter import purlobo_to_identifiers
 from pmr2.ricordo.converter import identifiers_to_purlobo
 from pmr2.ricordo.engine import Search
+
+from .templates import ViewPageTemplateFile
 
 
 class IQueryForm(zope.interface.Interface):
