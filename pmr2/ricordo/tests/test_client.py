@@ -115,8 +115,8 @@ class LiveOwlSparqlClientTestCase(unittest.TestCase):
 
     def setUp(self):
         self.client = client.OwlSparqlClient(graph_urls=(
-            'http://models.example.com/go.owl',
-            'http://models.example.com/fma.owl',
+            'http://namespaces.physiomeproject.org/go.owl',
+            'http://namespaces.physiomeproject.org/fma.owl',
         ))
 
     def test_list_all_terms(self):
@@ -130,7 +130,7 @@ class LiveOwlSparqlClientTestCase(unittest.TestCase):
 
     def test_list_go_only(self):
         results = self.client.get_owl_terms('plasma membrane', graph_urls=(
-            'http://models.example.com/go.owl',
+            'http://namespaces.physiomeproject.org/go.owl',
         ))
         self.assertEqual(len(results), 109)
 
