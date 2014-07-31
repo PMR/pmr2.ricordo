@@ -1,0 +1,27 @@
+<configure 
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="pmr2.ricordo">
+
+  <browser:page
+      for="pmr2.ricordo.interfaces.IQRItem"
+      name="Default"
+      class=".ctitem.Default"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="pmr2.ricordo.interfaces.IQRItem"
+      name="Workspace"
+      class=".ctitem.Workspace"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="pmr2.ricordo.interfaces.IQRItem"
+      name="ExposureFile"
+      class=".ctitem.ExposureFile"
+      permission="zope2.View"
+      />
+
+</configure>

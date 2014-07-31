@@ -20,7 +20,8 @@ from pmr2.ricordo.converter import purlobo_to_identifiers
 from pmr2.ricordo.converter import identifiers_to_purlobo
 from pmr2.ricordo.engine import Search
 
-from .templates import ViewPageTemplateFile
+from pmr2.ricordo.browser.templates import ViewPageTemplateFile
+from pmr2.ricordo.browser.ctitem import QRItem
 
 
 class IQueryForm(zope.interface.Interface):
@@ -126,10 +127,15 @@ class QueryForm(form.PostForm):
             return brain[0]
         return {}
 
+    def resolve_item(self, item):
+        # thing
+        pass
+
     def render_item(self, item):
-        template = self._qr_templates.get(item['obj'].portal_type,
-            self._qr_default)
-        return template(self, item=item)
+        item = QRItem(item)
+        view = zope.component.getMultiAdapter((item, self.request),
+            name=item['obj'].portal_type,)
+        return view()
 
     def results(self):
         self.others = []

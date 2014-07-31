@@ -28,3 +28,8 @@ class IRicordoConfig(zope.interface.Interface):
         ),
     )
 
+
+class IQRItem(zope.interface.Interface):
+    """
+    A marker interface for a query result item.
+    """

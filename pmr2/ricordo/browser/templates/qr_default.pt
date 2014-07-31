@@ -1,4 +1,4 @@
-<a tal:attributes="href options/item/obj/getURL | options/item/source"
-    tal:content="options/item/obj/Title | options/item/source"></a> -
-  <span tal:content="options/item/value"></span>
+<a tal:attributes="href context/obj/getURL | context/source"
+    tal:content="context/obj/Title | context/source"></a> -
+  <span tal:content="context/value"></span>
 

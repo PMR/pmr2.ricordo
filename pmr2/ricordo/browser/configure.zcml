@@ -4,6 +4,7 @@
     i18n_domain="pmr2.virtuoso.browser">
 
   <include package="Products.CMFCore" file="permissions.zcml" />
+  <include file="ctitem.zcml" />
 
   <browser:view
       for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
