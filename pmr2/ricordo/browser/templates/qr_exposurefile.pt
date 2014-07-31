@@ -1,4 +1,13 @@
-ExposureFile
-<a tal:attributes="href context/obj/getURL | context/source"
-    tal:content="context/obj/Title | context/source"></a> -
-  <span tal:content="context/value"></span>
+<dl>
+  <dt><a tal:attributes="href string:${view/subject/getURL}/view"
+      tal:content="view/subject/Title"
+    ></a> [ExposureFile]</dt>
+  <dd tal:content="view/subject/Description"></dd>
+  <dt>Subject</dt>
+  <dd tal:content="context/value"></dd>
+  <dt>Metadata Source</dt>
+  <dd tal:define="href context/obj/getURL | context/source">
+    <a tal:attributes="href string:${href}/view"
+      tal:content="context/obj/Title | context/source"></a>
+  </dd>
+</dl>
