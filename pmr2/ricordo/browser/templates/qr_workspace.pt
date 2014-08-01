@@ -1,16 +1,23 @@
-<a tal:attributes="href context/obj/getURL | context/source"
-    tal:content="context/obj/Title | context/source"></a> -
-  <span tal:content="context/value"></span>
 <dl>
-  <dt><a tal:attributes="href context/obj/getURL"
-      tal:content="context/obj/Title"
-    ></a> [Workspace]</dt>
-  <dd tal:content="context/obj/Description"></dd>
-  <dt>Subject</dt>
-  <dd tal:content="context/value"></dd>
-  <dt>Metadata Source</dt>
-  <dd tal:define="href context/obj/getURL | context/source">
-    <a tal:attributes="href string:${href}/view"
-      tal:content="context/obj/Title | context/source"></a>
+  <dt>
+    [Workspace]
+    <span tal:content="context/obj/Title">Workspace Title</span> / 
+    <a tal:attributes="href view/fileurl" tal:content="context/value"
+      ></a>
+  </dt>
+</dl>
+<dl class="collapsible collapsedOnLoad">
+  <dt class="collapsibleHeader">Details</dt>
+  <dd class="collapsibleContent">
+    <dl>
+      <dd tal:content="context/obj/Description"></dd>
+      <dt>Subject</dt>
+      <dd tal:content="context/value"></dd>
+      <dt>Metadata Source</dt>
+      <dd tal:define="href context/obj/getURL | context/source">
+        <a tal:attributes="href string:${href}/view"
+          tal:content="context/obj/Title | context/source"></a>
+      </dd>
+    </dl>
   </dd>
 </dl>
