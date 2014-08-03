@@ -38,13 +38,13 @@ class QRItemView(BrowserView):
         return self.render()
 
 
-class Default(QRItemView):
+class DefaultView(QRItemView):
     """
     Default view
     """
 
 
-class ExposureFile(QRItemView):
+class ExposureFileView(QRItemView):
     """
     Handler for an ExposureFile type subject.
     """
@@ -66,7 +66,7 @@ class ExposureFile(QRItemView):
             self.subject = results[0]
 
 
-class Workspace(QRItemView):
+class WorkspaceView(QRItemView):
     """
     Handler for an Workspace subject.
     """

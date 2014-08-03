@@ -6,21 +6,21 @@
   <browser:page
       for="pmr2.ricordo.interfaces.IQRItem"
       name="Default"
-      class=".ctitem.Default"
+      class=".ctitem.DefaultView"
       permission="zope2.View"
       />
 
   <browser:page
       for="pmr2.ricordo.interfaces.IQRItem"
       name="Workspace"
-      class=".ctitem.Workspace"
+      class=".ctitem.WorkspaceView"
       permission="zope2.View"
       />
 
   <browser:page
       for="pmr2.ricordo.interfaces.IQRItem"
       name="ExposureFile"
-      class=".ctitem.ExposureFile"
+      class=".ctitem.ExposureFileView"
       permission="zope2.View"
       />
 
