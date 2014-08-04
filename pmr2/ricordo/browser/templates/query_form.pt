@@ -1,0 +1,52 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="plone"
+      metal:use-macro="context/@@pmr2-z3cform-macros/main">
+
+<metal:block fill-slot="main">
+
+  <h1 tal:condition="view/label" class="documentFirstHeading"
+      tal:content="view/label | nothing"/>
+
+  <tal:block metal:use-macro="context/@@ploneform-macros/titlelessform">
+
+    <metal:block fill-slot="formbottom">
+
+      <tal:loop tal:repeat="result view/results">
+      <dl class="collapsible">
+          <dt class="collapsibleHeader">
+            <span tal:content="result/label"></span>
+          </dt>
+          <dd class="collapsibleContent">
+            <dl>
+              <dt>
+                <span tal:content="result/label"></span> -
+                (<a tal:attributes="href result/label_src"
+                  tal:content="result/label_src"></a>)
+              </dt>
+              <dd tal:content="result/definition">
+                Description of this ontological term.
+              </dd>
+            </dl>
+            <ul>
+              <li tal:repeat="item result/items">
+                <tal:block
+                    tal:content="structure python:view.render_item(item)">
+                </tal:block>
+              </li>
+            </ul>
+          </dd>
+      <dl>
+      </tal:loop>
+
+      <span tal:replace="structure context/@@authenticator/authenticator"/>
+
+    </metal:block>
+
+  </tal:block>
+
+</metal:block>
+
+</html>

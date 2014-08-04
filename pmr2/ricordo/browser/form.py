@@ -26,6 +26,24 @@ from pmr2.ricordo.browser.ctitem import QRItem
 
 class IQueryForm(zope.interface.Interface):
 
+    simple_query = zope.schema.TextLine(
+        title=u'Ontology term to query',
+        description=u'Start by typing the ontology term you wish to find, '
+            'then select the desired term out of the possible terms to query '
+            'with in the list presented by the drop down.',
+        required=True,
+    )
+
+    #ontologies = zope.schema.List(
+    #    title=u'Ontologies',
+    #    description=u'Choose the ontologies to be used',
+    #    required=False,
+    #    value_type=zope.schema.Choice(vocabulary='pmr2.ricordo.ontologies'),
+    #)
+
+
+class IAdvanceQueryForm(zope.interface.Interface):
+
     query = zope.schema.TextLine(
         title=u'Query String',
         description=u'Manchester query to ask the knowledgebase.',
@@ -76,6 +94,8 @@ class QueryForm(form.PostForm):
 
     _results = ()
 
+    data_key = 'simple_query'
+
     def update(self):
         super(QueryForm, self).update()
         form = BaseTermForm(self.context, self.request)
@@ -111,7 +131,7 @@ class QueryForm(form.PostForm):
             rdfstore_owlkb_uri_map=identifiers_to_purlobo,
             sparql_endpoint=settings.sparql_endpoint,
         )
-        self._results = self.search.query(data['query'])
+        self._results = self.search.query(data[self.data_key])
 
     def resolve_obj(self, graph_iri):
         brain = self.portal_catalog(path=graph_iri.replace(
@@ -119,10 +139,6 @@ class QueryForm(form.PostForm):
         if brain:
             return brain[0]
         return {}
-
-    def resolve_item(self, item):
-        # thing
-        pass
 
     def render_item(self, item):
         item = QRItem(item)

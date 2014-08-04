@@ -76,6 +76,13 @@ $(document).ready(function () {
         updateTermSelection
     );
 
+    hookOwlInput(
+        "#form-widgets-simple_query",
+        window.location.href.toString().replace(
+            /pmr2_ricordo\/query.*/, 'pmr2_ricordo/owlterms/'),
+        updateSimpleTermSelection
+    );
+
     $('#btnBuildQuery').button().on('click', function() {
         var result = '';
         if (selectedRelation) {
@@ -141,3 +148,18 @@ function updateRelationSelection(item) {
     return item;
 }
 
+function updateSimpleTermSelection(item, value) {
+    selectedTerm = item.replace(/[^(]*\((.*)\)/, '$1');
+    key = "term-details";
+    div = $('#' + key);
+    if (div.length == 0) {
+        // create the element
+        console.log('create');
+        $("#form-widgets-simple_query").parent().append(
+            '<span id="' + key + '"></span>');
+        div = $('#' + key);
+    }
+    div.text(item);
+    console.log(div);
+    return selectedTerm;
+}
