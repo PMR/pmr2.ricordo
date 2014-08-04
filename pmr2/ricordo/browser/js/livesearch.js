@@ -92,6 +92,9 @@ $(document).ready(function () {
         $('#form-widgets-query').val(result);
     });
 
+    // disable browser autocomplete
+    $('#form-widgets-simple_query').attr('autocomplete', 'off');
+
 });
 
 function hookOwlInput(selector, target_base, updater) {
@@ -150,16 +153,6 @@ function updateRelationSelection(item) {
 
 function updateSimpleTermSelection(item, value) {
     selectedTerm = item.replace(/[^(]*\((.*)\)/, '$1');
-    key = "term-details";
-    div = $('#' + key);
-    if (div.length == 0) {
-        // create the element
-        console.log('create');
-        $("#form-widgets-simple_query").parent().append(
-            '<span id="' + key + '"></span>');
-        div = $('#' + key);
-    }
-    div.text(item);
-    console.log(div);
-    return selectedTerm;
+    target_input = $('#form-widgets-term_id').val(selectedTerm);
+    return item;
 }

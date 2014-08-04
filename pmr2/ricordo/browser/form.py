@@ -34,6 +34,12 @@ class IQueryForm(zope.interface.Interface):
         required=True,
     )
 
+    term_id = zope.schema.TextLine(
+        title=u'Term ID',
+        description=u'',
+        required=False,  # hidden
+    )
+
     #ontologies = zope.schema.List(
     #    title=u'Ontologies',
     #    description=u'Choose the ontologies to be used',
@@ -94,13 +100,29 @@ class QueryForm(form.PostForm):
 
     _results = ()
 
-    data_key = 'simple_query'
-
     def update(self):
         super(QueryForm, self).update()
+
+    def updateWidgets(self):
+        super(QueryForm, self).updateWidgets()
+        self.widgets['simple_query'].size = 64
+        self.widgets['term_id'].mode = 'hidden'
+
+    def _update_subform(self):
+        # in case where the more "advanced" form is eventually needed
         form = BaseTermForm(self.context, self.request)
         zope.interface.alsoProvides(form, ISubForm)
         self.base_term_form = form
+
+    def get_query_data(self, data):
+        """
+        Return the thing to be queried from the incoming data specific
+        to this form's interface.
+        """
+
+        # this falls back to the simple_query if term_id is not
+        # populated
+        return data['term_id'] or data['simple_query']
 
     @z3c.form.button.buttonAndHandler(u'Search', name='search')
     def handleSearch(self, action):
@@ -131,7 +153,7 @@ class QueryForm(form.PostForm):
             rdfstore_owlkb_uri_map=identifiers_to_purlobo,
             sparql_endpoint=settings.sparql_endpoint,
         )
-        self._results = self.search.query(data[self.data_key])
+        self._results = self.search.query(self.get_query_data(data))
 
     def resolve_obj(self, graph_iri):
         brain = self.portal_catalog(path=graph_iri.replace(
@@ -166,14 +188,6 @@ class QueryForm(form.PostForm):
                 )
                 indexed_items_i = (i for i in items_i if i['obj'])
 
-                # TODO figure out how to get the "true" object to be
-                # linked, i.e. exposure items should contain
-                # for exposures
-                # - full description of the object.
-                # - link to the *actual* object of the statement
-                # - backlink to the source (the metadata file)
-                # for workspace
-                # - ?  as is is fine?
                 yield {
                     'label': label,
                     'definition': definition,
