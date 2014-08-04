@@ -74,13 +74,6 @@ class QueryForm(form.PostForm):
     template = ViewPageTemplateFile('query_form.pt')
     ignoreContext = True
 
-    _qr_templates = {
-        'ExposureFile': ViewPageTemplateFile('qr_exposurefile.pt'),
-        'Workspace': ViewPageTemplateFile('qr_workspace.pt'),
-    }
-
-    _qr_default = ViewPageTemplateFile('qr_default.pt')
-
     _results = ()
 
     def update(self):
