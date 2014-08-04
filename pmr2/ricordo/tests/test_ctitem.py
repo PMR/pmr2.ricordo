@@ -12,7 +12,7 @@ from pmr2.ricordo.interfaces import IRicordoConfig
 from pmr2.testing.base import TestRequest
 from pmr2.ricordo.tests import base
 from pmr2.ricordo.browser.ctitem import QRItem
-from pmr2.ricordo.browser.ctitem import Default
+from pmr2.ricordo.browser.ctitem import DefaultView
 
 
 class CTItemTestCase(ptc.PloneTestCase):
@@ -30,6 +30,6 @@ class CTItemTestCase(ptc.PloneTestCase):
             'value': 'some subject',
         })
         request = TestRequest()
-        result = Default(context, request)()
+        result = DefaultView(context, request)()
         self.assertIn('http://nohost/plone/dummy', result)
         self.assertIn('Dummy Object', result)
