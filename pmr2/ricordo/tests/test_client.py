@@ -143,3 +143,10 @@ class LiveOwlSparqlClientTestCase(unittest.TestCase):
         result = self.client.get_url_label(
             'http://purl.org/obo/owlapi/gene_ontology#GO_5886')
         self.assertIsNone(result)
+
+    def test_get_term(self):
+        result = self.client.get_term(
+            'http://purl.org/obo/owlapi/gene_ontology#GO_0005886')
+        self.assertEqual(result['label'], 'plasma membrane')
+        self.assertTrue('The membrane surrounding a cell'
+            in result['definition'])

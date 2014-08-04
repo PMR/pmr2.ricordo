@@ -115,3 +115,7 @@ class Search(object):
     def get_owl_url_label(self, url, graph_urls=None):
         url = self._map_owlkb_url(url)
         return self.owls.get_url_label(url, graph_urls)
+
+    def get_owl_term(self, url, graph_urls=None):
+        url = self._map_owlkb_url(url)
+        return self.owls.get_term(url, graph_urls)

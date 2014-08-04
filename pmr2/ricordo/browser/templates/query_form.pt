@@ -42,14 +42,22 @@
 
     <metal:block fill-slot="formbottom">
 
-      <dl>
-        <tal:loop tal:repeat="result view/results">
-          <dt>
-            <span tal:content="result/label"></span> -
-            (<a tal:attributes="href result/label_src"
-              tal:content="result/label_src"></a>)
+      <tal:loop tal:repeat="result view/results">
+      <dl class="collapsible">
+          <dt class="collapsibleHeader">
+            <span tal:content="result/label"></span>
           </dt>
-          <dd>
+          <dd class="collapsibleContent">
+            <dl>
+              <dt>
+                <span tal:content="result/label"></span> -
+                (<a tal:attributes="href result/label_src"
+                  tal:content="result/label_src"></a>)
+              </dt>
+              <dd tal:content="result/definition">
+                Description of this ontological term.
+              </dd>
+            </dl>
             <ul>
               <li tal:repeat="item result/items">
                 <tal:block
@@ -58,8 +66,8 @@
               </li>
             </ul>
           </dd>
-        </tal:loop>
       <dl>
+      </tal:loop>
 
       <span tal:replace="structure context/@@authenticator/authenticator"/>
 

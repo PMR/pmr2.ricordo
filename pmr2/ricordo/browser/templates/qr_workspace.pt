@@ -1,9 +1,10 @@
 <dl>
   <dt>
     [Workspace]
-    <span tal:content="context/obj/Title">Workspace Title</span> / 
-    <a tal:attributes="href view/fileurl" tal:content="context/value"
-      ></a>
+    <a tal:attributes="href view/fileurl">
+      <span tal:content="context/obj/Title">Workspace Title</span> / 
+      <span tal:content="context/value"></span>
+    </a>
   </dt>
 </dl>
 <dl class="collapsible collapsedOnLoad">

@@ -140,9 +140,11 @@ class QueryForm(form.PostForm):
     def results(self):
         self.others = []
         for url, items in self._results:
-            label = self.search.get_owl_term(url)
-            if label:
+            term = self.search.get_owl_term(url)
+            if term:
                 # convert graph value into instance-local type.
+                label = term['label']
+                definition = term['definition']
                 items_i = (
                     {
                         'source': i['g']['value'].replace(
@@ -165,6 +167,7 @@ class QueryForm(form.PostForm):
                 # - ?  as is is fine?
                 yield {
                     'label': label,
+                    'definition': definition,
                     'label_src': url,
                     'items': indexed_items_i,
                 }

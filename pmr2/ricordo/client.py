@@ -122,6 +122,16 @@ class OwlSparqlClient(SparqlClient):
                 filter regex(?o, "%(keyword)s", "i") .
             } %(limit)s
         """,
+
+        'url_lookup_details': """
+            select ?label ?def
+            %(from_graph_statement)s
+            where {
+                <%(iri)s> <http://www.w3.org/2000/01/rdf-schema#label> ?label .
+                <%(iri)s> <http://www.geneontology.org/formats/oboInOwl#def> ?def
+            }
+        """,
+
         'url_lookup': """
             select ?o
             %(from_graph_statement)s
@@ -129,6 +139,7 @@ class OwlSparqlClient(SparqlClient):
                 <%(iri)s> <http://www.w3.org/2000/01/rdf-schema#label> ?o
             }
         """,
+
     }
 
     def __init__(self, graph_urls=(), *a, **kw):
@@ -166,3 +177,15 @@ class OwlSparqlClient(SparqlClient):
         results = self.query(self.make_query('url_lookup', graph_urls,
             iri=quote_iri(url)))['results']['bindings']
         return (results and results[0]['o']['value'] or None)
+
+    def get_term(self, url, graph_urls=None):
+        """
+        Returns the details of one OWL term by URL.
+        """
+
+        results = self.query(self.make_query('url_lookup_details', graph_urls,
+            iri=quote_iri(url)))['results']['bindings']
+        return (results and {
+                'label': results[0]['label']['value'],
+                'definition': results[0]['def']['value'],
+            } or {})
