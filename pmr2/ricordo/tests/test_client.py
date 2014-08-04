@@ -150,3 +150,9 @@ class LiveOwlSparqlClientTestCase(unittest.TestCase):
         self.assertEqual(result['label'], 'plasma membrane')
         self.assertTrue('The membrane surrounding a cell'
             in result['definition'])
+
+    def test_get_term_definition_missing(self):
+        result = self.client.get_term(
+            'http://purl.org/obo/owlapi/fma#FMA_9611')
+        self.assertEqual(result['label'], 'Femur')
+        self.assertTrue(result['definition'] is None)

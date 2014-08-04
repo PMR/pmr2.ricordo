@@ -128,7 +128,10 @@ class OwlSparqlClient(SparqlClient):
             %(from_graph_statement)s
             where {
                 <%(iri)s> <http://www.w3.org/2000/01/rdf-schema#label> ?label .
-                <%(iri)s> <http://www.geneontology.org/formats/oboInOwl#def> ?def
+                optional { 
+                    <%(iri)s>
+                        <http://www.geneontology.org/formats/oboInOwl#def> ?def
+                }
             }
         """,
 
@@ -187,5 +190,5 @@ class OwlSparqlClient(SparqlClient):
             iri=quote_iri(url)))['results']['bindings']
         return (results and {
                 'label': results[0]['label']['value'],
-                'definition': results[0]['def']['value'],
+                'definition': results[0].get('def', {}).get('value'),
             } or {})
