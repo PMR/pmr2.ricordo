@@ -143,7 +143,7 @@ class OwlSparqlClient(SparqlClient):
         kw['from_graph_statement'] = graph_stmt
         return self._sparql_query[query_id] % kw
 
-    def get_owl_terms(self, keyword, limit=None, graph_urls=None):
+    def get_terms(self, keyword, limit=None, graph_urls=None):
         """
         Method to provide the labels and the associated identifier for
         the terms within the selected ontologies users will be searching

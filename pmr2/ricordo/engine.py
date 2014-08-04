@@ -105,10 +105,13 @@ class Search(object):
     def get_owl_terms(self, keyword, graph_urls=None):
         return self.owls.get_owl_terms(keyword, graph_urls)
 
-    def get_owl_url_label(self, url, graph_urls=None):
+    def _map_owlkb_url(self, url):
         if self.rdfstore_owlkb_uri_map:
             mapped = self.rdfstore_owlkb_uri_map(url)
             if mapped:
-                url = mapped[0]
+                return mapped[0]
+        return url
 
+    def get_owl_url_label(self, url, graph_urls=None):
+        url = self._map_owlkb_url(url)
         return self.owls.get_url_label(url, graph_urls)

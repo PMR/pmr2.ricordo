@@ -140,7 +140,7 @@ class QueryForm(form.PostForm):
     def results(self):
         self.others = []
         for url, items in self._results:
-            label = self.search.get_owl_url_label(url)
+            label = self.search.get_owl_term(url)
             if label:
                 # convert graph value into instance-local type.
                 items_i = (

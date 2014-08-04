@@ -18,11 +18,6 @@ class OwlSparqlPage(TraversePage, JsonPage):
 
     json_mimetype = 'application/json'
 
-    #client = OwlSparqlClient(graph_urls=(
-    #    'http://models.example.com/go.owl',
-    #    'http://models.example.com/fma.owl',
-    #))
-
     def update(self):
         limit = None
         if len(self.traverse_subpath) > 1:
@@ -39,7 +34,7 @@ class OwlSparqlPage(TraversePage, JsonPage):
         owl_urls = ricordo_config is not None and ricordo_config.owl_urls or ()
         try:
             client = OwlSparqlClient(graph_urls=owl_urls)
-            results = client.get_owl_terms(self.url_subpath, limit=limit)
+            results = client.get_terms(self.url_subpath, limit=limit)
         except:
             results = []
             logger.exception('failed to get owl terms')

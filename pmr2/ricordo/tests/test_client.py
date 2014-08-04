@@ -120,16 +120,16 @@ class LiveOwlSparqlClientTestCase(unittest.TestCase):
         ))
 
     def test_list_all_terms(self):
-        results = self.client.get_owl_terms('plasma membrane')
+        results = self.client.get_terms('plasma membrane')
         self.assertEqual(len(results), 230)
 
     def test_list_all_terms_quoted(self):
         # the double-quote should be escaped and not cause error.
-        results = self.client.get_owl_terms('plasma membrane"')
+        results = self.client.get_terms('plasma membrane"')
         self.assertEqual(len(results), 0)
 
     def test_list_go_only(self):
-        results = self.client.get_owl_terms('plasma membrane', graph_urls=(
+        results = self.client.get_terms('plasma membrane', graph_urls=(
             'http://namespaces.physiomeproject.org/go.owl',
         ))
         self.assertEqual(len(results), 109)
