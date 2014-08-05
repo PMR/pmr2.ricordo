@@ -1,11 +1,12 @@
+<li tal:condition="view/subject">
 <dl>
   <dt>
     [ExposureFile]
     <a tal:attributes="href string:${view/subject/getURL}/view"
-        tal:content="view/subject/Title"
+        tal:content="python:getattr(view.subject, 'Title', '') or getattr(view.subject, 'id', '<nothing>')"
       ></a>
   </dt>
-  <dd tal:content="view/subject/Description"></dd>
+  <dd tal:condition="view/subject" tal:content="view/subject/Description"></dd>
 </dl>
 <dl class="collapsible collapsedOnLoad">
   <dt class="collapsibleHeader">Details</dt>
@@ -21,3 +22,4 @@
     </dl>
   </dd>
 </dl>
+</li>

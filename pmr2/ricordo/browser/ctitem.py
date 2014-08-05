@@ -63,6 +63,8 @@ class ExposureFileView(QRItemView):
         results = catalog(path=target)
         self.subject = None
         if results:
+            # if this is missing then this isn't an exposure file, then
+            # the template will not render.
             self.subject = results[0]
 
 

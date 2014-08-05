@@ -35,11 +35,11 @@
               </dd>
             </dl>
             <ul>
-              <li tal:repeat="item result/items">
+              <tal:loop tal:repeat="item result/items">
                 <tal:block
                     tal:content="structure python:view.render_item(item)">
                 </tal:block>
-              </li>
+              </tal:loop>
             </ul>
           </dd>
       <dl>

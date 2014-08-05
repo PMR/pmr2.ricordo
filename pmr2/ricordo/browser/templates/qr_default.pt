@@ -1,4 +1,5 @@
+<li>
 <a tal:attributes="href context/obj/getURL | context/source"
     tal:content="context/obj/Title | context/source"></a> -
   <span tal:content="context/value"></span>
-
+</li>
