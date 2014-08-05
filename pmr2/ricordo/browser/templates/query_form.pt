@@ -14,6 +14,10 @@
 
     <metal:block fill-slot="formbottom">
 
+      <tal:if tal:condition="view/searched">
+      <h3>Search results</h3>
+      </tal:if>
+
       <tal:loop tal:repeat="result view/results">
       <dl class="collapsible">
           <dt class="collapsibleHeader">
@@ -40,6 +44,10 @@
           </dd>
       <dl>
       </tal:loop>
+
+      <tal:if tal:condition="not:view/results">
+      <p>There are no results for this search term.</p>
+      </tal:if>
 
       <span tal:replace="structure context/@@authenticator/authenticator"/>
 

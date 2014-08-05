@@ -99,6 +99,9 @@ class QueryForm(form.PostForm):
     ignoreContext = True
 
     _results = ()
+    _cleaned_results = []
+    searched = False
+    raw_result_count = 0
 
     def update(self):
         super(QueryForm, self).update()
@@ -135,6 +138,8 @@ class QueryForm(form.PostForm):
             self.status = self.formErrorsMessage
             return
 
+        self.searched = True
+
         gs = zope.component.getUtility(IPMR2GlobalSettings)
         settings = zope.component.getAdapter(gs, name='pmr2_virtuoso')
         self.graph_prefix = settings.graph_prefix
@@ -155,6 +160,8 @@ class QueryForm(form.PostForm):
         )
         self._results = self.search.query(self.get_query_data(data))
 
+        self.raw_result_count = len(self._results)
+
     def resolve_obj(self, graph_iri):
         brain = self.portal_catalog(path=graph_iri.replace(
             self.graph_prefix, '', 1))
@@ -168,7 +175,7 @@ class QueryForm(form.PostForm):
             name=item['obj'].portal_type,)
         return view()
 
-    def results(self):
+    def results_i(self):
         self.others = []
         for url, items in self._results:
             term = self.search.get_owl_term(url)
@@ -186,16 +193,23 @@ class QueryForm(form.PostForm):
                     for i in items if i['g']['value'].startswith(
                         self.graph_prefix)
                 )
-                indexed_items_i = (i for i in items_i if i['obj'])
+                indexed_items_i = [i for i in items_i if i['obj']]
 
-                yield {
-                    'label': label,
-                    'definition': definition,
-                    'label_src': url,
-                    'items': indexed_items_i,
-                }
+                if indexed_items_i:
+                    yield {
+                        'label': label,
+                        'definition': definition,
+                        'label_src': url,
+                        'items': indexed_items_i,
+                    }
+
             else:
                 self.others.append((url, items))
+
+    def results(self):
+        if not self._cleaned_results:
+            self._cleaned_results = list(self.results_i())
+        return self._cleaned_results
 
 
 class RicordoConfigEditForm(form.EditForm):
