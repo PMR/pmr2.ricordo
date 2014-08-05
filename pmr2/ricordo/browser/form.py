@@ -17,6 +17,7 @@ from pmr2.virtuoso.interfaces import IEngine
 
 from pmr2.ricordo.interfaces import IRicordoConfig
 from pmr2.ricordo.converter import purlobo_to_identifiers
+from pmr2.ricordo.converter import purlobo_to_owlkb
 from pmr2.ricordo.converter import identifiers_to_purlobo
 from pmr2.ricordo.engine import Search
 
@@ -125,7 +126,24 @@ class QueryForm(form.PostForm):
 
         # this falls back to the simple_query if term_id is not
         # populated
-        return data['term_id'] or data['simple_query']
+        if not data['term_id']:
+            return data['simple_query']
+
+        # XXX totally some side effects here
+        term_id = data['term_id']
+        simple_query = ''
+        if term_id:
+            term_url = purlobo_to_owlkb(term_id)
+            label = None
+
+            if term_url:
+                label = self.search.get_owl_url_label(term_url[0])
+
+            if label:
+                simple_query = '%s (%s)' % (label, term_id)
+
+        self.widgets['simple_query'].value = simple_query
+        return data['term_id']
 
     @z3c.form.button.buttonAndHandler(u'Search', name='search')
     def handleSearch(self, action):
