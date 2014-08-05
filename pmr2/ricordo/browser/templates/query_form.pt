@@ -45,7 +45,7 @@
       <dl>
       </tal:loop>
 
-      <tal:if tal:condition="not:view/results">
+      <tal:if tal:condition="python:view.searched and not view.results()">
       <p>There are no results for this search term.</p>
       </tal:if>
 
