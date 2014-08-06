@@ -31,7 +31,8 @@ class IQueryForm(zope.interface.Interface):
         title=u'Ontology term to query',
         description=u'Start by typing the ontology term you wish to find, '
             'then select the desired term out of the possible terms to query '
-            'with in the list presented by the drop down.',
+            'with in the list presented by the drop down.  A green checkmark '
+            'will indicate that the search will be valid for the term shown.',
         required=True,
     )
 
@@ -139,10 +140,7 @@ class QueryForm(form.PostForm):
             if term_url:
                 label = self.search.get_owl_url_label(term_url[0])
 
-            if label:
-                simple_query = '%s (%s)' % (label, term_id)
-
-        self.widgets['simple_query'].value = simple_query
+        self.widgets['simple_query'].value = label
         return data['term_id']
 
     @z3c.form.button.buttonAndHandler(u'Search', name='search')

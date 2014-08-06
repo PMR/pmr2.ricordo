@@ -59,6 +59,16 @@ var relations = [
 ];
 
 var max_terms = 32;
+var last_values = {};
+var something;
+
+function untag(selector, key) {
+    if (last_values[selector] != $(selector).val()) {
+        div = $(key);
+        div.html('');
+        last_values[selector] = $(selector).val();
+    }
+}
 
 $(document).ready(function () {
 
@@ -82,6 +92,13 @@ $(document).ready(function () {
             /pmr2_ricordo\/query.*/, 'pmr2_ricordo/owlterms/'),
         updateSimpleTermSelection
     );
+
+    $("#form-widgets-simple_query").keyup(function() {
+        untag("#form-widgets-simple_query", '#valid_term')
+    });
+    $("#form-widgets-simple_query").change(function() {
+        untag("#form-widgets-simple_query", '#valid_term')
+    });
 
     $('#btnBuildQuery').button().on('click', function() {
         var result = '';
@@ -153,6 +170,23 @@ function updateRelationSelection(item) {
 
 function updateSimpleTermSelection(item, value) {
     selectedTerm = item.replace(/[^(]*\((.*)\)/, '$1');
+    var selectedText = item.replace(/(.*) \(.*\)/, '$1');
+    var target_parent = "#form-widgets-simple_query";
+    var key = "valid_term";
+    var div = $('#' + key);
+
+    if (div.length == 0) {
+        // create the element
+        $(target_parent).parent().append(
+            '<span id="' + key + '"></span>');
+        div = $('#' + key);
+    }
+    div.html('<span style="color:#070;font-size:133%;">✔</span>(' +
+        selectedTerm + ')');
+
     target_input = $('#form-widgets-term_id').val(selectedTerm);
-    return item;
+
+    // ensure the change/keyup events don't reset the thing..
+    last_values[target_parent] = selectedText;
+    return selectedText;
 }
