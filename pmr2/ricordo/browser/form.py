@@ -107,6 +107,7 @@ class QueryForm(form.PostForm):
 
     def update(self):
         super(QueryForm, self).update()
+        self.request['disable_border'] = True
 
     def updateWidgets(self):
         super(QueryForm, self).updateWidgets()
