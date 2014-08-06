@@ -92,9 +92,6 @@ $(document).ready(function () {
         $('#form-widgets-query').val(result);
     });
 
-    // disable browser autocomplete
-    $('#form-widgets-simple_query').attr('autocomplete', 'off');
-
 });
 
 function hookOwlInput(selector, target_base, updater) {
@@ -112,6 +109,9 @@ function hookOwlInput(selector, target_base, updater) {
         items: max_terms,
         minLength: 2
     });
+
+    // disable browser autocomplete
+    $(selector).attr('autocomplete', 'off');
 }
 
 function suggestTerms(selector, target_base, label_url_map) {
