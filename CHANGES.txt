@@ -1,10 +1,14 @@
 Changelog
 =========
 
-0.x - Unreleased
+0.2 - 2014-08-14
 ----------------
 
 - Moved the Virtuoso JSON client class to pmr2.virtuoso.
+- Prevent duplicated terms from being returned.
+- Improved the rendering of search results by providing a way to show
+  content-specific result types and facilities to register these views.
+- Improved autocomplete and the general UI surrounding search interface.
 
 0.1.5 - 2014-07-18
 ------------------
