@@ -5,9 +5,9 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="PMR RICORDO Integration"
+      title="PMR2 RICORDO Integration"
       directory="profiles/default"
-      description="Enables the integration of RICORDO into PMR."
+      description="Enables the integration of RICORDO into PMR2."
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
