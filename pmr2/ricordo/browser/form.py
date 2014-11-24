@@ -144,19 +144,7 @@ class QueryForm(form.PostForm):
         self.widgets['simple_query'].value = label
         return data['term_id']
 
-    @z3c.form.button.buttonAndHandler(u'Search', name='search')
-    def handleSearch(self, action):
-        """
-        Use the engine and search.
-        """
-
-        data, errors = self.extractData()
-        if errors:
-            self.status = self.formErrorsMessage
-            return
-
-        self.searched = True
-
+    def _prepare_search_engine(self):
         gs = zope.component.getUtility(IPMR2GlobalSettings)
         settings = zope.component.getAdapter(gs, name='pmr2_virtuoso')
         self.graph_prefix = settings.graph_prefix
@@ -175,6 +163,22 @@ class QueryForm(form.PostForm):
             rdfstore_owlkb_uri_map=identifiers_to_purlobo,
             sparql_endpoint=settings.sparql_endpoint,
         )
+        return self.search
+
+    @z3c.form.button.buttonAndHandler(u'Search', name='search')
+    def handleSearch(self, action):
+        """
+        Use the engine and search.
+        """
+
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        self.searched = True
+        self._prepare_search_engine()
+
         self._results = self.search.query(self.get_query_data(data))
 
         self.raw_result_count = len(self._results)
