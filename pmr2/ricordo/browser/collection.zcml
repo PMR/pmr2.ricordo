@@ -1,0 +1,14 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="pmr2.json">
+
+  <browser:page
+      for="pmr2.ricordo.browser.form.RootView"
+      name="query"
+      class=".collection.QueryForm"
+      layer="pmr2.json.interfaces.ISimpleJsonLayer1"
+      permission="zope2.View"
+      />
+
+</configure>

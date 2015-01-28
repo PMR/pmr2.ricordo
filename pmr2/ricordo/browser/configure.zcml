@@ -1,10 +1,15 @@
 <configure 
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="pmr2.virtuoso.browser">
 
   <include package="Products.CMFCore" file="permissions.zcml" />
   <include file="ctitem.zcml" />
+
+  <configure zcml:condition="installed pmr2.json">
+    <include file="collection.zcml" />
+  </configure>
 
   <browser:view
       for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
