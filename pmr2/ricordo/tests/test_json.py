@@ -5,10 +5,9 @@ import zope.component
 
 from Products.PloneTestCase import ptc
 
-from pmr2.json.tests import base
-
 try:
     from pmr2.ricordo.browser import collection
+    from pmr2.json.tests import base
     _test_json = True
 except ImportError:
     _test_json = False
