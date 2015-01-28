@@ -22,14 +22,14 @@ class CTItemTestCase(ptc.PloneTestCase):
 
     def test_base_render(self):
         # simulate a real one
+        obj = self.portal.portal_catalog(portal_type='Document')[0]
         context = QRItem({
-            'obj': {
-                'getURL': 'http://nohost/plone/dummy',
-                'Title': 'Dummy Object',
-            },
+            'obj': obj,
             'value': 'some subject',
         })
         request = TestRequest()
-        result = DefaultView(context, request)()
-        self.assertIn('http://nohost/plone/dummy', result)
-        self.assertIn('Dummy Object', result)
+        view = DefaultView(context, request)
+        result = view()
+        self.assertIn('http://nohost/plone/front-page', result)
+        self.assertIn('Welcome to Plone', result)
+        self.assertEqual(view.href, 'http://nohost/plone/front-page')

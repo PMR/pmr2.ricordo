@@ -2,7 +2,7 @@
 <dl>
   <dt>
     [Workspace]
-    <a tal:attributes="href view/fileurl">
+    <a tal:attributes="href view/href">
       <span tal:content="context/obj/Title">Workspace Title</span> / 
       <span tal:content="context/value"></span>
     </a>
@@ -18,7 +18,7 @@
       <dt>Metadata Source</dt>
       <dd tal:define="href context/obj/getURL | context/source">
         <a tal:attributes="href string:${href}/view"
-          tal:content="context/obj/Title | context/source"></a>
+          tal:content="view/source"></a>
       </dd>
     </dl>
   </dd>

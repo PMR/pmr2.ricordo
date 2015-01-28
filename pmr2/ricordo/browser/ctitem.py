@@ -28,7 +28,8 @@ class QRItemView(BrowserView):
     index = ViewPageTemplateFile('qr_default.pt')
 
     def update(self):
-        pass
+        obj = self.context.get('obj')
+        self.href = obj and obj.getURL() or context.source
 
     def render(self):
         return self.index()
@@ -52,6 +53,8 @@ class ExposureFileView(QRItemView):
     index = ViewPageTemplateFile('qr_exposurefile.pt')
 
     def update(self):
+        super(ExposureFileView, self).update()
+
         # resolve the exposure object
         obj = self.context.get('obj')
         if not obj:
@@ -67,6 +70,9 @@ class ExposureFileView(QRItemView):
             # the template will not render.
             self.subject = results[0]
 
+        self.href = self.href + '/view'
+        self.source = obj.Title or self.context.get('source')
+
 
 class WorkspaceView(QRItemView):
     """
@@ -76,6 +82,8 @@ class WorkspaceView(QRItemView):
     index = ViewPageTemplateFile('qr_workspace.pt')
 
     def update(self):
+        super(WorkspaceView, self).update()
+
         obj = self.context.get('obj')
         if not obj:
             return
@@ -85,5 +93,6 @@ class WorkspaceView(QRItemView):
         if not storage:
             # XXX handle all these missing things?
             return
-        self.fileurl = '%s/@@file/%s/%s' % (
-            obj.getPath(), storage.rev, self.context['value'])
+        self.href = '%s/@@file/%s/%s' % (
+            obj.getURL(), storage.rev, self.context['value'])
+        self.source = obj.Title or self.context.get('source')
