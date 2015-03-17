@@ -28,8 +28,8 @@ class RicordoJsonTestCase(ptc.PloneTestCase):
         results = json.loads(f())
         self.assertEqual(
             [i['name'] for i in results["collection"]['template']['data']],
-            ['json.widgets.simple_query', 'json.widgets.term_id',
-                'json.buttons.search'],
+            ['form.widgets.simple_query', 'form.widgets.term_id',
+                'form.buttons.search'],
         )
 
 
