@@ -23,6 +23,13 @@ id_cl = 'http://identifiers.org/cl/CL:0000017'
 id_chebi = 'http://identifiers.org/chebi/CHEBI:100461'
 id_opb = 'http://identifiers.org/opb/OPB_01226'
 
+owlkb_go = 'GO_0005886'
+owlkb_fma = 'FMA_63841'
+owlkb_pr = 'PRO_000002023'
+owlkb_cl = 'CL_0000017'
+owlkb_chebi = 'CHEBI_100461'
+owlkb_opb = 'OPB_01226'
+
 
 class ConverterTestCase(unittest.TestCase):
     """
@@ -69,3 +76,20 @@ class ConverterTestCase(unittest.TestCase):
             [purl_chebi])
 
         self.assertEqual(converter.identifiers_to_purlobo(id_opb), [bhi_opb])
+
+    def test_owlkb_to_purl(self):
+        self.assertEqual(converter.owlkb_to_purlobo(owlkb_go), [purl_go])
+        self.assertEqual(converter.owlkb_to_purlobo(owlkb_fma), [purl_fma])
+        self.assertEqual(converter.owlkb_to_purlobo(owlkb_pr), [purl_pr])
+        self.assertEqual(converter.owlkb_to_purlobo(owlkb_cl), [purl_cl])
+        self.assertEqual(converter.owlkb_to_purlobo(owlkb_chebi), [purl_chebi])
+        self.assertEqual(converter.owlkb_to_purlobo(owlkb_opb), [bhi_opb])
+
+    def test_purl_to_owlkb(self):
+        self.assertEqual(converter.purlobo_to_owlkb(purl_go), [owlkb_go,])
+        self.assertEqual(converter.purlobo_to_owlkb(purl_fma), [owlkb_fma,])
+        self.assertEqual(converter.purlobo_to_owlkb(purl_pr), [owlkb_pr,])
+        self.assertEqual(converter.purlobo_to_owlkb(purl_cl), [owlkb_cl,])
+        self.assertEqual(converter.purlobo_to_owlkb(purl_chebi),
+            [owlkb_chebi,])
+        self.assertEqual(converter.purlobo_to_owlkb(bhi_opb), [owlkb_opb,])

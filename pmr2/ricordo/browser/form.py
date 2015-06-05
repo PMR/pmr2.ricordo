@@ -17,7 +17,7 @@ from pmr2.virtuoso.interfaces import IEngine
 
 from pmr2.ricordo.interfaces import IRicordoConfig
 from pmr2.ricordo.converter import purlobo_to_identifiers
-from pmr2.ricordo.converter import purlobo_to_owlkb
+from pmr2.ricordo.converter import owlkb_to_purlobo
 from pmr2.ricordo.converter import identifiers_to_purlobo
 from pmr2.ricordo.engine import Search
 
@@ -135,7 +135,7 @@ class QueryForm(form.PostForm):
         term_id = data['term_id']
         simple_query = ''
         if term_id:
-            term_url = purlobo_to_owlkb(term_id)
+            term_url = owlkb_to_purlobo(term_id)
             label = None
 
             if term_url:
