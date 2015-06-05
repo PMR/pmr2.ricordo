@@ -60,7 +60,7 @@ identifiers_to_purlobo = Converter((
     ('^http://identifiers.org/cl/CL:([0-9]*)$',
         'http://purl.org/obo/owlapi/pro#CL_\\1'),
 
-    ('^http://identifiers.org/obo.cheibi/CHEBI:([0-9]*)$',
+    ('^http://identifiers.org/obo.chebi/CHEBI:([0-9]*)$',
         'http://purl.org/obo/owlapi/chebi_ontology#CHEBI_\\1'),
     ('^http://identifiers.org/chebi/CHEBI:([0-9]*)$',
         'http://purl.org/obo/owlapi/chebi_ontology#CHEBI_\\1'),

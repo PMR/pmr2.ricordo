@@ -48,3 +48,24 @@ class ConverterTestCase(unittest.TestCase):
 
         self.assertEqual(converter.purlobo_to_identifiers(bhi_opb), [
             id_opb,])
+
+    def test_identifers_to_nonstandard(self):
+
+        self.assertEqual(converter.identifiers_to_purlobo(id_go), [purl_go])
+        self.assertEqual(converter.identifiers_to_purlobo(idobo_go), [purl_go])
+
+        self.assertEqual(converter.identifiers_to_purlobo(id_fma), [purl_fma])
+        self.assertEqual(converter.identifiers_to_purlobo(idobo_fma),
+            [purl_fma])
+
+        self.assertEqual(converter.identifiers_to_purlobo(id_pr), [purl_pr])
+        self.assertEqual(converter.identifiers_to_purlobo(idobo_pr), [purl_pr])
+
+        self.assertEqual(converter.identifiers_to_purlobo(id_cl), [purl_cl])
+
+        self.assertEqual(converter.identifiers_to_purlobo(id_chebi),
+            [purl_chebi])
+        self.assertEqual(converter.identifiers_to_purlobo(idobo_chebi),
+            [purl_chebi])
+
+        self.assertEqual(converter.identifiers_to_purlobo(id_opb), [bhi_opb])
