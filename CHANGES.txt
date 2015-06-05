@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.4 - 2015-06-05
+----------------
+
+- Added conversion for OPB, based on OPB.owl.
+- Fixed all the conversion methods, now they are tested to behave as
+  expected.
+
 0.3 - 2015-03-19
 ----------------
 
