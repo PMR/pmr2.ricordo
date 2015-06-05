@@ -6,7 +6,7 @@ import json
 
 from pmr2.virtuoso.client import SparqlClient
 from pmr2.virtuoso.sparql import quote_iri
-from pmr2.ricordo.converter import purlobo_to_owlkb
+from pmr2.ricordo.converter import owlkb_to_purlobo
 
 
 def load_queries(target_dir):
@@ -80,7 +80,7 @@ class SimpleOwlkbClient(SparqlClient):
     '''
 
     def query_terms(self, query):
-        iri = purlobo_to_owlkb(query)
+        iri = owlkb_to_purlobo(query)
         if iri:
             # should only be one.
             iri = iri[0]
