@@ -35,6 +35,9 @@ purlobo_to_identifiers = Converter((
     ('^http://purl.org/obo/owlapi/chebi_ontology#CHEBI_([0-9]*)$',
         'http://identifiers.org/obo.chebi/CHEBI:\\1'),
 
+    ('^http://bhi.washington.edu/OPB#OPB_([0-9]*)$',
+        'http://identifiers.org/opb/OPB_\\1'),
+
 ))
 
 # inverse of the above.
@@ -61,6 +64,9 @@ identifiers_to_purlobo = Converter((
         'http://purl.org/obo/owlapi/chebi_ontology#CHEBI_\\1'),
     ('^http://identifiers.org/chebi/CHEBI:([0-9]*)$',
         'http://purl.org/obo/owlapi/chebi_ontology#CHEBI_\\1'),
+
+    ('^http://identifiers.org/opb/OPB_([1-9]*)$',
+        'http://bhi.washington.edu/OPB#OPB_\\1'),
 
 ))
 
