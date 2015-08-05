@@ -5,19 +5,21 @@ from pmr2.ricordo.browser import form
 from pmr2.ricordo.browser.ctitem import QRItem
 
 
+def item_to_link(request, item):
+    # Move this to pmr2.virtuoso helper methods?
+    item = QRItem(item)
+    view = zope.component.getMultiAdapter((item, request),
+        name=item['obj'].portal_type,)
+    view.update()
+
+    return {
+        'rel': 'bookmark',
+        'href': view.href,
+        'prompt': view.source,
+    }
+
+
 class QueryForm(JsonCollectionFormMixin, form.QueryForm):
-
-    def _item_to_link(self, item):
-        item = QRItem(item)
-        view = zope.component.getMultiAdapter((item, self.request),
-            name=item['obj'].portal_type,)
-        view.update()
-
-        return {
-            'rel': 'bookmark',
-            'href': view.href,
-            'prompt': view.source,
-        }
 
     def update(self):
         super(QueryForm, self).update()
@@ -30,5 +32,5 @@ class QueryForm(JsonCollectionFormMixin, form.QueryForm):
                         'value': v['label'],
                     },
                 ],
-                'links': [self._item_to_link(i) for i in v['items']],
+                'links': [item_to_link(self.request, i) for i in v['items']],
             } for v in self.results()]
